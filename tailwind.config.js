@@ -6,7 +6,7 @@ const {
 module.exports = {
   content: [
     // your paths
-    "./src/**/*.{ts,tsx}",
+    "./src/**/*.{js,jsx}",
   ],
   darkMode: "class",
   theme: {
