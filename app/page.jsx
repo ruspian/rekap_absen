@@ -3,6 +3,7 @@ import { AuroraBackground } from "@/components/ui/shadcn-io/aurora-background";
 import { LiquidButton } from "@/components/ui/shadcn-io/liquid-button";
 import { TextGenerateEffect } from "@/components/ui/shadcn-io/text-generate-effect";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -34,8 +35,8 @@ export default function Home() {
             className="font-bold text-3xl text-center text-slate-950 dark:text-slate-50"
           />
 
-          <LiquidButton variant={"outline"} className="mt-10" href="/login">
-            MASUK
+          <LiquidButton variant={"outline"} className="mt-10">
+            <Link href="/masuk">Get Started!</Link>
           </LiquidButton>
         </div>
       </div>
