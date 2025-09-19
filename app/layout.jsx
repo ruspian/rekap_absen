@@ -6,6 +6,7 @@ import {
   SidebarLink,
   SidebarWrapper,
 } from "@/components/sidebar/Sidebar";
+import AuthProvider from "@/providers/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +26,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   const links = [
-    { label: "Dashboard", href: "/", icon: <FaHome size={18} /> },
+    { label: "Dashboard", href: "/dashboard", icon: <FaHome size={18} /> },
     { label: "About", href: "/about", icon: <FaUser size={18} /> },
     { label: "Projects", href: "/projects", icon: <FaFolder size={18} /> },
   ];
@@ -34,19 +35,24 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Sidebar */}
-        <SidebarWrapper>
-          <SidebarBody>
-            <div className="flex flex-col gap-2">
-              {links.map((link) => (
-                <SidebarLink key={link.href} link={link} />
-              ))}
-            </div>
-          </SidebarBody>
-        </SidebarWrapper>
+        <AuthProvider>
+          {/* Wrapper utama dengan Flexbox */}
+          <div className="flex h-screen">
+            {/* Sidebar */}
+            <SidebarWrapper>
+              <SidebarBody>
+                <div className="flex flex-col gap-2">
+                  {links.map((link) => (
+                    <SidebarLink key={link.href} link={link} />
+                  ))}
+                </div>
+              </SidebarBody>
+            </SidebarWrapper>
 
-        {/* Konten utama */}
-        <main className="">{children}</main>
+            {/* Konten utama yang mengisi sisa ruang */}
+            <main className="flex-1 p-4 overflow-y-auto">{children}</main>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

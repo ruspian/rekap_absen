@@ -1,9 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const LoginButton = ({ children }) => {
+  const router = useRouter();
+
+  const { data: session, status } = useSession();
+
+  // jika login berhasil
+  useEffect(() => {
+    // cek status dan sesi
+    if ((status === "authenticated" && session) !== null) {
+      router.push("/dashboard"); // arahkan ke halaman dashboard
+    }
+  }, [status, session]); // muat ulang saat session atau status berubah
+
   return (
     <button
       className="
