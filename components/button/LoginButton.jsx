@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 const LoginButton = ({ children }) => {
   return (
@@ -14,7 +17,9 @@ const LoginButton = ({ children }) => {
         overflow-visible
         transition-colors duration-300
         hover:bg-gray-800
+        cursor-pointer
       "
+      onClick={() => signIn("google")}
     >
       {/* --- Logo yang Muncul Saat Hover --- */}
       <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 group-hover:rotate-6 transition-all duration-300 ease-out">
