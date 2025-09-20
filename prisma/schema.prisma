@@ -86,7 +86,7 @@ enum Gender {
 // MODEL SISWA
 model Siswa {
   id            String          @id @default(cuid())
-  name          String
+  nama          String
   gender        Gender
   tempat_lahir  String
   tanggal_lahir DateTime
@@ -166,13 +166,44 @@ model Inventaris {
   keterangan  String?
 }
 
+// MODEL MINGGU
+model Minggu {
+  id          String @id @default(cuid())
+  nomorMinggu Int   
+
+  bulanId String
+  bulan   Bulan  @relation(fields: [bulanId], references: [id], onDelete: Cascade)
+
+  // Kombinasi bulan dan nomor minggu harus unik
+  @@unique([bulanId, nomorMinggu])
+}
+
 // MODEL BULAN
 model Bulan {
-  id          String          @id @default(cuid())
-  nama_bulan  String
-  minggu      Int
-  tahunAjaran String
+  id         String @id @default(cuid())
+  nomorBulan Int    
+  namaBulan  String 
+
+  tahunAjaranId String
+  tahunAjaran   TahunAjaran @relation(fields: [tahunAjaranId], references: [id], onDelete: Cascade)
+
+  minggu Minggu[]
   rekap_kehadiran RekapKehadiran[]
+
+  // Kombinasi tahun dan nomor bulan harus unik
+  // Ini mencegah ada dua "Juli" di tahun ajaran yang sama
+  @@unique([tahunAjaranId, nomorBulan])
+}
+
+// MODEL TAHUN AJARAN
+model TahunAjaran {
+  id    String  @id @default(cuid())
+  tahun String  @unique // Contoh: "2024/2025", harus unik
+  
+  bulan Bulan[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 

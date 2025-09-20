@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   SquareUser,
 } from "lucide-react";
+import { ToasterProvider } from "@/providers/ToasterProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -76,22 +77,24 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          {/* Wrapper utama dengan Flexbox */}
-          <div className="flex h-screen">
-            {/* Sidebar */}
-            <SidebarWrapper>
-              <SidebarBody>
-                <div className="flex flex-col gap-2">
-                  {links.map((link) => (
-                    <SidebarLink key={link.href} link={link} />
-                  ))}
-                </div>
-              </SidebarBody>
-            </SidebarWrapper>
+          <ToasterProvider>
+            {/* Wrapper utama dengan Flexbox */}
+            <div className="flex h-screen">
+              {/* Sidebar */}
+              <SidebarWrapper>
+                <SidebarBody>
+                  <div className="flex flex-col gap-2">
+                    {links.map((link) => (
+                      <SidebarLink key={link.href} link={link} />
+                    ))}
+                  </div>
+                </SidebarBody>
+              </SidebarWrapper>
 
-            {/* Konten utama yang mengisi sisa ruang */}
-            <main className="flex-1 p-4 overflow-y-auto">{children}</main>
-          </div>
+              {/* Konten utama yang mengisi sisa ruang */}
+              <main className="flex-1 p-4 overflow-y-auto">{children}</main>
+            </div>
+          </ToasterProvider>
         </AuthProvider>
       </body>
     </html>

@@ -67,12 +67,7 @@ export function AnimatedFloatingButton({ icons, className, iconSize = 15 }) {
             }}
           >
             {href ? (
-              <Link
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center"
-              >
+              <Link href={href} className="flex items-center justify-center">
                 <Icon
                   size={iconSize}
                   className="text-muted-foreground transition-all hover:text-foreground hover:scale-110"
