@@ -1,12 +1,20 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { FaHome, FaUser, FaFolder } from "react-icons/fa";
 import {
   SidebarBody,
   SidebarLink,
   SidebarWrapper,
 } from "@/components/sidebar/Sidebar";
 import AuthProvider from "@/providers/AuthProvider";
+import {
+  ClipboardList,
+  Drama,
+  FileCheck,
+  LayoutDashboard,
+  Sheet,
+  ShieldCheck,
+  SquareUser,
+} from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,9 +34,41 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   const links = [
-    { label: "Dashboard", href: "/dashboard", icon: <FaHome size={18} /> },
-    { label: "About", href: "/about", icon: <FaUser size={18} /> },
-    { label: "Projects", href: "/projects", icon: <FaFolder size={18} /> },
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+      icon: <LayoutDashboard size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Data Siswa",
+      href: "/siswa",
+      icon: <SquareUser size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Rekap Absensi",
+      href: "/rekap",
+      icon: <Sheet size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Bakat & Minat",
+      href: "/bakat-minat",
+      icon: <Drama size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Pembinaan Wali",
+      href: "/pembinaan-wali",
+      icon: <ClipboardList size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Pembinaan Kasus",
+      href: "/pembinaan-kasus",
+      icon: <FileCheck size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Inventaris",
+      href: "/inventaris",
+      icon: <ShieldCheck size={30} strokeWidth={2.25} />,
+    },
   ];
   return (
     <html lang="en">

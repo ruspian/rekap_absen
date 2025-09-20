@@ -1,0 +1,44 @@
+"use client";
+
+import { TableSiswa } from "@/components/table/TabelSiswa";
+import Breadcrumb from "@/components/ui/breadcrumb";
+import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
+import { FileDown, Printer, UserPlus } from "lucide-react";
+import React from "react";
+
+const SiswaPage = () => {
+  const socialIcons = [
+    {
+      Icon: UserPlus,
+      href: "/siswa/tambah",
+      className: "hover:bg-accent",
+    },
+    {
+      Icon: Printer,
+      href: "/siswa/cetak",
+      className: "hover:bg-accent",
+    },
+    {
+      Icon: FileDown,
+      href: "/siswa/download",
+      className: "hover:bg-accent",
+    },
+  ];
+  return (
+    <div>
+      <Breadcrumb />
+
+      <div className="my-10">
+        <h2 className="text-2xl font-semibold">Data Siswa</h2>
+      </div>
+
+      <div className="relative flex items-start px-4 mb-4">
+        <AnimatedFloatingButton icons={socialIcons} iconSize={15} />
+      </div>
+
+      <TableSiswa />
+    </div>
+  );
+};
+
+export default SiswaPage;
