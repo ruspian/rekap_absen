@@ -3,6 +3,7 @@
 import { TableSiswa } from "@/components/table/TabelSiswa";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
+import { KelasDropdown } from "@/components/ui/kelas-selector-dropdown";
 import { FileDown, Printer, UserPlus } from "lucide-react";
 import React from "react";
 
@@ -32,8 +33,14 @@ const SiswaPage = () => {
         <h2 className="text-2xl font-semibold">Data Siswa</h2>
       </div>
 
-      <div className="relative flex items-start px-4 mb-4">
-        <AnimatedFloatingButton icons={socialIcons} iconSize={15} />
+      <div className="flex items-center justify-between w-full">
+        <div className="relative flex items-start px-4 mb-4">
+          <AnimatedFloatingButton icons={socialIcons} iconSize={15} />
+        </div>
+
+        <div className="relative z-10">
+          <KelasDropdown className="" />
+        </div>
       </div>
 
       <TableSiswa />
