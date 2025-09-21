@@ -115,7 +115,10 @@ function TableSiswa() {
               <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
                 Alamat
               </th>
-              <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
+              <th
+                className="border px-2 py-2 whitespace-nowrap print-hidden"
+                rowSpan={2}
+              >
                 Aksi
               </th>
             </tr>
@@ -162,9 +165,13 @@ function TableSiswa() {
                   <td className="border px-2 py-1 text-center whitespace-nowrap">
                     {siswa.alamat}
                   </td>
-                  <td className="border px-2 py-1 text-center">
+                  <td className="border px-2 py-1 text-center print-hidden">
                     <div className="flex gap-2 justify-center">
-                      <Button size="sm" variant="outline">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="cursor-pointer"
+                      >
                         <Link href={`/siswa/edit?id=${siswa.id}`}>
                           <Pencil size={16} />
                         </Link>
@@ -173,6 +180,7 @@ function TableSiswa() {
                         size="sm"
                         variant="destructive"
                         onClick={() => handleDelete(siswa.id)}
+                        className="cursor-pointer"
                       >
                         <Trash2 size={16} />
                       </Button>

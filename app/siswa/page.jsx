@@ -5,9 +5,18 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
 import { KelasDropdown } from "@/components/ui/kelas-selector-dropdown";
 import { FileDown, Printer, UserPlus } from "lucide-react";
-import React from "react";
+import React, { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 
 const SiswaPage = () => {
+  const tableRef = useRef();
+
+  // fungsi print
+  const handlePrint = useReactToPrint({
+    contentRef: tableRef,
+    documentTitle: "Data Siswa",
+  });
+
   const Icons = [
     {
       Icon: UserPlus,
@@ -16,8 +25,8 @@ const SiswaPage = () => {
     },
     {
       Icon: Printer,
-      href: "/siswa/cetak",
       className: "hover:bg-accent",
+      onClick: handlePrint,
     },
     {
       Icon: FileDown,
@@ -43,7 +52,9 @@ const SiswaPage = () => {
         </div>
       </div>
 
-      <TableSiswa />
+      <div ref={tableRef}>
+        <TableSiswa />
+      </div>
     </div>
   );
 };

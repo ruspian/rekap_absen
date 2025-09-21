@@ -41,12 +41,12 @@ export function AnimatedFloatingButton({ icons, className, iconSize = 15 }) {
             <Plus
               size={iconSize}
               strokeWidth={3}
-              className="text-primary-foreground"
+              className="text-primary-foreground cursor-pointer"
             />
           </motion.button>
         </motion.div>
 
-        {icons.map(({ Icon, href, className }, index) => (
+        {icons.map(({ Icon, href, onClick, className }, index) => (
           <motion.div
             key={index}
             className={cn(
@@ -74,10 +74,15 @@ export function AnimatedFloatingButton({ icons, className, iconSize = 15 }) {
                 />
               </Link>
             ) : (
-              <Icon
-                size={iconSize}
-                className="text-muted-foreground transition-all hover:text-foreground hover:scale-110"
-              />
+              <button
+                onClick={onClick}
+                className="flex items-center justify-center w-full h-full cursor-pointer"
+              >
+                <Icon
+                  size={iconSize}
+                  className="text-muted-foreground transition-all hover:text-foreground hover:scale-110"
+                />
+              </button>
             )}
           </motion.div>
         ))}
