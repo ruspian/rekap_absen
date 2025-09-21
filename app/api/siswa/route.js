@@ -7,7 +7,6 @@ export const POST = async (req) => {
   try {
     const body = await req.json();
     const session = await auth();
-    console.log(body);
 
     // pastikan user login dan role admin
     if (!session && session.user.role !== "admin") {
@@ -46,6 +45,22 @@ export const POST = async (req) => {
   } catch (error) {
     console.error("Gagal tambah data siswa: ", error);
 
+    return new NextResponse(JSON.stringify({ message: "Terjadi Kesalahan!" }), {
+      status: 500,
+    });
+  }
+};
+
+// AMBIL DATA SISWA
+export const GET = async (req) => {
+  try {
+    const siswa = await prisma.siswa.findMany();
+    return new NextResponse(
+      JSON.stringify(siswa),
+      { message: "Sukses!" },
+      { status: 200 }
+    );
+  } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Terjadi Kesalahan!" }), {
       status: 500,
     });

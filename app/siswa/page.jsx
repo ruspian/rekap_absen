@@ -8,7 +8,7 @@ import { FileDown, Printer, UserPlus } from "lucide-react";
 import React from "react";
 
 const SiswaPage = () => {
-  const socialIcons = [
+  const Icons = [
     {
       Icon: UserPlus,
       href: "/siswa/tambah",
@@ -35,7 +35,7 @@ const SiswaPage = () => {
 
       <div className="flex items-center justify-between w-full">
         <div className="relative flex items-start px-4 mb-4">
-          <AnimatedFloatingButton icons={socialIcons} iconSize={15} />
+          <AnimatedFloatingButton icons={Icons} iconSize={15} />
         </div>
 
         <div className="relative z-10">

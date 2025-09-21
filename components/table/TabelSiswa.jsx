@@ -1,216 +1,166 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const columns = [
-  {
-    header: "No",
-    accessorKey: "no",
-  },
-  {
-    header: "Nama",
-    accessorKey: "nama",
-  },
-  {
-    header: "Jenis Kelamin",
-    accessorKey: "jenisKelamin",
-  },
-  {
-    header: "Tempat Lahir",
-    accessorKey: "tempatLahir",
-  },
-  {
-    header: "Tanggal Lahir",
-    accessorKey: "tanggalLahir",
-  },
-  {
-    header: "Nama Ayah",
-    accessorKey: "namaAyah",
-  },
-  {
-    header: "Nama Ibu",
-    accessorKey: "namaIbu",
-  },
-  {
-    header: "No HP Ayah",
-    accessorKey: "noHpAyah",
-  },
-  {
-    header: "No HP Ibu",
-    accessorKey: "noHpIbu",
-  },
-  {
-    header: "Alamat",
-    accessorKey: "alamat",
-  },
-  {
-    header: "Aksi",
-    accessorKey: "aksi",
-  },
-];
+import { getSiswa } from "@/lib/data";
+import { useToaster } from "@/providers/ToasterProvider";
+import { Button } from "@/components/ui/button";
+import { Pencil, Trash2 } from "lucide-react";
+import { formatTanggal } from "@/lib/formatTanggal";
 
 function TableSiswa() {
   const [data, setData] = useState([]);
+  const toaster = useToaster();
 
   useEffect(() => {
-    async function fetchPosts() {
-      const res = await fetch(
-        "https://res.cloudinary.com/dlzlfasou/raw/upload/users-01_fertyx.json"
-      );
-      const data = await res.json();
-      setData(data.slice(0, 5)); // Limit to 5 items
-    }
-    fetchPosts();
-  }, []);
+    // fetch data siswa
+    const fetchSiswa = async () => {
+      try {
+        const siswa = await getSiswa();
+        setData(siswa);
+      } catch (error) {
+        toaster.current?.show({
+          title: "Error",
+          message: String(error),
+          variant: "error",
+          duration: 5000,
+          position: "top-center",
+        });
+      }
+    };
 
-  const table = useReactTable({
-    data,
-    columns,
-    columnResizeMode: "onChange",
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    enableSortingRemoval: false,
-  });
+    // panggil fungsi fetchSiswa
+    fetchSiswa();
+  }, [toaster]); // muat ulang ketika toasternya berubah
+
+  // fungsi edit siswa
+  const editSiswa = (siswa) => {
+    console.log(siswa);
+  };
 
   return (
-    <div className="bg-background max-w-[1200px]">
-      <Table
-        className="table-fixed"
-        style={{
-          width: table.getCenterTotalSize(),
-        }}
-      >
-        <TableHeader>
-          <TableRow>
-            <TableCell
-              colSpan={columns.length}
-              className="text-center font-semibold text-lg bg-slate-300 text-black"
-            >
-              DATA SISWA KELAS 10 TKJ
-            </TableCell>
-          </TableRow>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-slate-300">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead
-                    key={header.id}
-                    className="relative h-10 select-none border-t [&>.cursor-col-resize]:last:opacity-0 text-black"
-                    aria-sort={
-                      header.column.getIsSorted() === "asc"
-                        ? "ascending"
-                        : header.column.getIsSorted() === "desc"
-                        ? "descending"
-                        : "none"
-                    }
-                    {...{
-                      colSpan: header.colSpan,
-                      style: {
-                        width: header.getSize(),
-                      },
-                    }}
-                  >
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={cn(
-                          header.column.getCanSort() &&
-                            "flex h-full cursor-pointer select-none items-center justify-between gap-2"
-                        )}
-                        onClick={header.column.getToggleSortingHandler()}
-                        onKeyDown={(e) => {
-                          // Enhanced keyboard handling for sorting
-                          if (
-                            header.column.getCanSort() &&
-                            (e.key === "Enter" || e.key === " ")
-                          ) {
-                            e.preventDefault();
-                            header.column.getToggleSortingHandler()?.(e);
-                          }
-                        }}
-                        tabIndex={header.column.getCanSort() ? 0 : undefined}
-                      >
-                        <span className="truncate">
-                          {flexRender(
-                            header.column.columnDef.header.toUpperCase(),
-                            header.getContext()
-                          )}
-                        </span>
-                        {{
-                          asc: (
-                            <ChevronUp
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              strokeWidth={2}
-                              aria-hidden="true"
-                            />
-                          ),
-                          desc: (
-                            <ChevronDown
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              strokeWidth={2}
-                              aria-hidden="true"
-                            />
-                          ),
-                        }[header.column.getIsSorted()] ?? null}
-                      </div>
-                    )}
-                    {header.column.getCanResize() && (
-                      <div
-                        {...{
-                          onDoubleClick: () => header.column.resetSize(),
-                          onMouseDown: header.getResizeHandler(),
-                          onTouchStart: header.getResizeHandler(),
-                          className:
-                            "absolute top-0 h-full w-4 cursor-col-resize user-select-none touch-none -right-2 z-10 flex justify-center before:absolute before:w-px before:inset-y-0 before:bg-border before:translate-x-px",
-                        }}
-                      />
-                    )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+    <div className="bg-background max-w-[1200px] mx-auto rounded-md shadow-md border">
+      {/* Wrapper biar bisa slide kalau overflow */}
+      <div className="overflow-x-auto">
+        <table className="table-auto border-collapse w-full text-sm">
+          {/* Judul Utama */}
+          <thead>
+            <tr>
+              <th
+                colSpan={11}
+                className="text-center font-bold text-lg bg-slate-100 text-black py-3"
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="truncate">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                Siswa Tidak Ditemukan!
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+                DATA SISWA KELAS 10 TKJ
+              </th>
+            </tr>
+          </thead>
+
+          {/* Header Kolom */}
+          <thead className="bg-slate-100">
+            <tr>
+              <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
+                No
+              </th>
+              <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
+                Nama
+              </th>
+              <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
+                Jenis Kelamin
+              </th>
+              <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
+                Tempat Lahir
+              </th>
+              <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
+                Tanggal Lahir
+              </th>
+              <th className="border px-2 py-2 whitespace-nowrap" colSpan={2}>
+                Nama Orang Tua
+              </th>
+              <th className="border px-2 py-2 whitespace-nowrap" colSpan={2}>
+                No HP
+              </th>
+              <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
+                Alamat
+              </th>
+              <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
+                Aksi
+              </th>
+            </tr>
+            <tr>
+              <th className="border px-2 py-1 whitespace-nowrap">Ayah</th>
+              <th className="border px-2 py-1 whitespace-nowrap">Ibu</th>
+              <th className="border px-2 py-1 whitespace-nowrap">Ayah</th>
+              <th className="border px-2 py-1 whitespace-nowrap">Ibu</th>
+            </tr>
+          </thead>
+
+          {/* Body */}
+          <tbody>
+            {data.length ? (
+              data.map((siswa, i) => (
+                <tr key={siswa.id || i} className="hover:bg-slate-50">
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {i + 1}
+                  </td>
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {siswa.nama}
+                  </td>
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {siswa.gender}
+                  </td>
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {siswa.tempat_lahir}
+                  </td>
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {formatTanggal(siswa.tanggal_lahir)}
+                  </td>
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {siswa.nama_ayah}
+                  </td>
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {siswa.nama_ibu}
+                  </td>
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {siswa.no_hp_ayah}
+                  </td>
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {siswa.no_hp_ibu}
+                  </td>
+                  <td className="border px-2 py-1 text-center whitespace-nowrap">
+                    {siswa.alamat}
+                  </td>
+                  <td className="border px-2 py-1 text-center">
+                    <div className="flex gap-2 justify-center">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={editSiswa(siswa)}
+                      >
+                        <Pencil size={16} />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => console.log("Delete", siswa)}
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={11}
+                  className="h-24 text-center text-gray-500 border"
+                >
+                  Siswa Tidak Ditemukan!
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
