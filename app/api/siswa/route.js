@@ -37,11 +37,7 @@ export const POST = async (req) => {
       },
     });
 
-    return new NextResponse(
-      JSON.stringify(dataSiswa),
-      { message: "Sukses!" },
-      { status: 201 }
-    );
+    return new NextResponse(JSON.stringify(dataSiswa), { status: 201 });
   } catch (error) {
     console.error("Gagal tambah data siswa: ", error);
 
@@ -55,11 +51,7 @@ export const POST = async (req) => {
 export const GET = async (req) => {
   try {
     const siswa = await prisma.siswa.findMany();
-    return new NextResponse(
-      JSON.stringify(siswa),
-      { message: "Sukses!" },
-      { status: 200 }
-    );
+    return new NextResponse(JSON.stringify(siswa), { status: 200 });
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Terjadi Kesalahan!" }), {
       status: 500,

@@ -2,13 +2,12 @@
 
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import Toaster from "@/components/ui/toast";
 import { getKelas } from "@/lib/data";
 import { useToaster } from "@/providers/ToasterProvider";
 import { UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 const TambahDataSiswaPage = () => {
   const [data, setData] = useState([]);
@@ -49,21 +48,22 @@ const TambahDataSiswaPage = () => {
           body: JSON.stringify(data),
         }
       );
+      const responseData = await response.json();
 
       if (!response.ok) {
-        const errorData = await response.json();
         toaster.current?.show({
           title: "Kesalahan!",
-          message: errorData.message,
+          message: responseData.message || "Gatal menambahkan data siswa",
           variant: "error",
           duration: 5000,
           position: "top-center",
         });
+        return; // hentikan eksekusi
       }
 
       toaster.current?.show({
-        title: response.message,
-        message: "Berhasil menambahkan data siswa",
+        title: "Sukses!",
+        message: responseData.message || "Berhasil menambahkan data siswa",
         variant: "success",
         duration: 5000,
         position: "top-center",
@@ -73,7 +73,7 @@ const TambahDataSiswaPage = () => {
     } catch (error) {
       toaster.current?.show({
         title: "Error",
-        message: error.message,
+        message: error.message || "Terjadi Kesalahan!",
         variant: "error",
         duration: 5000,
         position: "top-center",
@@ -184,7 +184,12 @@ const TambahDataSiswaPage = () => {
           <input {...register("alamat")} className="border rounded-sm p-1" />
         </div>
 
-        <Button type="submit">Simpan</Button>
+        <Button
+          type="submit"
+          className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
+        >
+          Simpan
+        </Button>
       </form>
     </div>
   );

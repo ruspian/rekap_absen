@@ -6,6 +6,7 @@ import { useToaster } from "@/providers/ToasterProvider";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { formatTanggal } from "@/lib/formatTanggal";
+import Link from "next/link";
 
 function TableSiswa() {
   const [data, setData] = useState([]);
@@ -32,9 +33,42 @@ function TableSiswa() {
     fetchSiswa();
   }, [toaster]); // muat ulang ketika toasternya berubah
 
-  // fungsi edit siswa
-  const editSiswa = (siswa) => {
-    console.log(siswa);
+  // fungsi hapus data siswa
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/siswa/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // jika gagal
+      if (!response.ok) {
+        toaster.current?.show({
+          title: "Waduh!",
+          message: "Gagal menghapus data.",
+          variant: "error",
+          duration: 5000,
+          position: "top-center",
+        });
+        return;
+      }
+
+      // set data siswa yang sudah dihapus
+      setData((prevData) => prevData.filter((siswa) => siswa.id !== id));
+
+      toaster.current?.show({
+        title: "Sukses!",
+        message: "Berhasil menghapus data.",
+        variant: "success",
+        duration: 5000,
+        position: "top-center",
+      });
+    } catch (error) {}
   };
 
   return (
@@ -130,17 +164,15 @@ function TableSiswa() {
                   </td>
                   <td className="border px-2 py-1 text-center">
                     <div className="flex gap-2 justify-center">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={editSiswa(siswa)}
-                      >
-                        <Pencil size={16} />
+                      <Button size="sm" variant="outline">
+                        <Link href={`/siswa/edit?id=${siswa.id}`}>
+                          <Pencil size={16} />
+                        </Link>
                       </Button>
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => console.log("Delete", siswa)}
+                        onClick={() => handleDelete(siswa.id)}
                       >
                         <Trash2 size={16} />
                       </Button>
