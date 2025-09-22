@@ -1,38 +1,9 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { getSiswa } from "@/lib/data";
-import { useToaster } from "@/providers/ToasterProvider";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { formatTanggal } from "@/lib/formatTanggal";
 import Link from "next/link";
 
-function TableSiswa() {
-  const [data, setData] = useState([]);
-  const toaster = useToaster();
-
-  useEffect(() => {
-    // fetch data siswa
-    const fetchSiswa = async () => {
-      try {
-        const siswa = await getSiswa();
-        setData(siswa);
-      } catch (error) {
-        toaster.current?.show({
-          title: "Error",
-          message: String(error),
-          variant: "error",
-          duration: 5000,
-          position: "top-center",
-        });
-      }
-    };
-
-    // panggil fungsi fetchSiswa
-    fetchSiswa();
-  }, [toaster]); // muat ulang ketika toasternya berubah
-
+function TableSiswa({ data }) {
   // fungsi hapus data siswa
   const handleDelete = async (id) => {
     try {
