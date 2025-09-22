@@ -2,17 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Check } from "lucide-react";
 
-const languages = [
-  { code: "X-TKJ", label: "X TKJ" },
-  { code: "XI-TKJ", label: "XI TKJ" },
-  { code: "XII-TKJ", label: "XII TKJ" },
-  { code: "X-ATR", label: "X ATR" },
-  { code: "XI-ATR", label: "XI ATR" },
-  { code: "XII-ATR", label: "XII ATR" },
-];
-
-export const KelasDropdown = () => {
-  const [selected, setSelected] = useState(languages[0]);
+export const KelasDropdown = ({ data, value, onChange }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -25,6 +15,22 @@ export const KelasDropdown = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // cari kelas yang dipilih
+  const selected = data.find((k) => k.id === value) || {
+    nama_kelas: "Pilih Kelas",
+    jurusan: "",
+  };
+
+  // FUNGSI SINGKAT JURUSAN
+  const singkatanJurusan = (jurusan) => {
+    const mapping = {
+      "Teknik Komputer Jaringan": "TKJ",
+      "Agribisnis Ternak Ruminansia": "ATR",
+    };
+
+    return mapping[jurusan] || jurusan;
+  };
 
   return (
     <div className="relative inline-block" ref={dropdownRef}>
@@ -39,9 +45,12 @@ export const KelasDropdown = () => {
           "hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all"
         )}
       >
-        <span>{selected.label}</span>
+        <span>
+          {`${selected.nama_kelas} ${singkatanJurusan(selected.jurusan)}`}
+        </span>
         <ChevronDown className="h-4 w-4" />
       </button>
+
       {/* Dropdown Menu */}
       {open && (
         <div
@@ -52,22 +61,43 @@ export const KelasDropdown = () => {
             "animate-fade-in"
           )}
         >
-          {languages.map((lang) => (
+          {/* Semua kelas */}
+          <button
+            onClick={() => {
+              onChange("all");
+              setOpen(false);
+            }}
+            className={cn(
+              "flex items-center gap-2 w-full px-3 py-2 text-sm text-left transition-colors",
+              value === "all"
+                ? "font-semibold text-blue-600 dark:text-blue-400"
+                : "text-gray-800 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-800"
+            )}
+          >
+            <span className="flex-1">Pilih Kelas</span>
+            {value === "all" && (
+              <Check className="h-4 w-4 text-blue-500 dark:text-blue-400" />
+            )}
+          </button>
+
+          {data.map((item) => (
             <button
-              key={lang.code}
+              key={item.id}
               onClick={() => {
-                setSelected(lang);
+                onChange(item.id); // kirim id ke parent
                 setOpen(false);
               }}
               className={cn(
                 "flex items-center gap-2 w-full px-3 py-2 text-sm text-left transition-colors",
-                selected.code === lang.code
+                value === item.id
                   ? "font-semibold text-blue-600 dark:text-blue-400"
                   : "text-gray-800 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-800"
               )}
             >
-              <span className="flex-1">{lang.label}</span>
-              {selected.code === lang.code && (
+              <span className="flex-1">{`${item.nama_kelas} ${singkatanJurusan(
+                item.jurusan
+              )}`}</span>
+              {value === item.id && (
                 <Check className="h-4 w-4 text-blue-500 dark:text-blue-400" />
               )}
             </button>

@@ -4,7 +4,7 @@ import { TableSiswa } from "@/components/table/TabelSiswa";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
 import { KelasDropdown } from "@/components/ui/kelas-selector-dropdown";
-import { getSiswa } from "@/lib/data";
+import { getKelas, getSiswa } from "@/lib/data";
 import { formatTanggal } from "@/lib/formatTanggal";
 import { useToaster } from "@/providers/ToasterProvider";
 import { FileDown, Printer, UserPlus } from "lucide-react";
@@ -14,6 +14,8 @@ import * as XLSX from "xlsx";
 
 const SiswaPage = () => {
   const [dataSiswa, setDataSiswa] = useState([]);
+  const [dataKelas, setDataKelas] = useState([]);
+  const [kelasFilter, setKelasFilter] = useState("Pilih Kelas");
   const toaster = useToaster();
 
   const tableRef = useRef();
@@ -38,6 +40,33 @@ const SiswaPage = () => {
     // panggil fungsi fetchSiswa
     fetchSiswa();
   }, [toaster]); // muat ulang ketika toasternya berubah
+
+  useEffect(() => {
+    // FETCH DATA KELAS
+    const fetchKelas = async () => {
+      try {
+        const kelas = await getKelas();
+        setDataKelas(kelas);
+      } catch (error) {
+        toaster.current?.show({
+          title: "Error",
+          message: String(error),
+          variant: "error",
+          duration: 5000,
+          position: "top-center",
+        });
+      }
+    };
+
+    // panggil fungsi fetchKelas
+    fetchKelas();
+  }, [toaster]);
+
+  // FILTER DATA SISWA BERDASARKAN KELAS
+  const filteredData =
+    kelasFilter === "Pilih Kelas"
+      ? dataSiswa
+      : dataSiswa.filter((s) => String(s.kelasId) === String(kelasFilter));
 
   // FUNGSI PRINT
   const handlePrint = useReactToPrint({
@@ -84,6 +113,44 @@ const SiswaPage = () => {
     XLSX.writeFile(workbook, "data-siswa.xlsx");
   };
 
+  // fungsi hapus data siswa
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/siswa/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // jika gagal
+      if (!response.ok) {
+        toaster.current?.show({
+          title: "Waduh!",
+          message: "Gagal menghapus data.",
+          variant: "error",
+          duration: 5000,
+          position: "top-center",
+        });
+        return;
+      }
+
+      // set data siswa yang sudah dihapus
+      setDataSiswa((prevData) => prevData.filter((siswa) => siswa.id !== id));
+
+      toaster.current?.show({
+        title: "Sukses!",
+        message: "Berhasil menghapus data.",
+        variant: "success",
+        duration: 5000,
+        position: "top-center",
+      });
+    } catch (error) {}
+  };
+
   // ICON TOMBOL
   const Icons = [
     {
@@ -117,12 +184,16 @@ const SiswaPage = () => {
         </div>
 
         <div className="relative z-10">
-          <KelasDropdown className="" />
+          <KelasDropdown
+            data={dataKelas}
+            value={kelasFilter}
+            onChange={setKelasFilter}
+          />
         </div>
       </div>
 
       <div ref={tableRef}>
-        <TableSiswa data={dataSiswa} />
+        <TableSiswa data={filteredData} onDelete={handleDelete} />
       </div>
     </div>
   );

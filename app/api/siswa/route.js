@@ -50,7 +50,11 @@ export const POST = async (req) => {
 // AMBIL DATA SISWA
 export const GET = async (req) => {
   try {
-    const siswa = await prisma.siswa.findMany();
+    const siswa = await prisma.siswa.findMany({
+      include: {
+        kelas: true,
+      },
+    });
     return new NextResponse(JSON.stringify(siswa), { status: 200 });
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Terjadi Kesalahan!" }), {

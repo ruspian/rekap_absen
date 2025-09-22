@@ -3,44 +3,9 @@ import { Pencil, Trash2 } from "lucide-react";
 import { formatTanggal } from "@/lib/formatTanggal";
 import Link from "next/link";
 
-function TableSiswa({ data }) {
-  // fungsi hapus data siswa
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/siswa/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      // jika gagal
-      if (!response.ok) {
-        toaster.current?.show({
-          title: "Waduh!",
-          message: "Gagal menghapus data.",
-          variant: "error",
-          duration: 5000,
-          position: "top-center",
-        });
-        return;
-      }
-
-      // set data siswa yang sudah dihapus
-      setData((prevData) => prevData.filter((siswa) => siswa.id !== id));
-
-      toaster.current?.show({
-        title: "Sukses!",
-        message: "Berhasil menghapus data.",
-        variant: "success",
-        duration: 5000,
-        position: "top-center",
-      });
-    } catch (error) {}
-  };
+function TableSiswa({ data, onDelete }) {
+  const [kelas] = data;
+  console.log(kelas);
 
   return (
     <div className="bg-background max-w-[1200px] mx-auto rounded-md shadow-md border">
@@ -50,12 +15,22 @@ function TableSiswa({ data }) {
           {/* Judul Utama */}
           <thead>
             <tr>
-              <th
-                colSpan={11}
-                className="text-center font-bold text-lg bg-slate-100 text-black py-3"
-              >
-                DATA SISWA KELAS 10 TKJ
-              </th>
+              {kelas?.kelasId ? (
+                <th
+                  colSpan={11}
+                  className="text-center font-bold text-lg bg-slate-100 text-black py-3"
+                >
+                  DATA SISWA KELAS {kelas?.kelas?.nama_kelas}{" "}
+                  {kelas?.kelas?.jurusan.toUpperCase()}
+                </th>
+              ) : (
+                <th
+                  colSpan={11}
+                  className="text-center font-bold text-lg bg-slate-100 text-black py-3"
+                >
+                  DATA SISWA
+                </th>
+              )}
             </tr>
           </thead>
 
@@ -150,7 +125,7 @@ function TableSiswa({ data }) {
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => handleDelete(siswa.id)}
+                        onClick={() => onDelete(siswa.id)}
                         className="cursor-pointer"
                       >
                         <Trash2 size={16} />
@@ -165,7 +140,7 @@ function TableSiswa({ data }) {
                   colSpan={11}
                   className="h-24 text-center text-gray-500 border"
                 >
-                  Siswa Tidak Ditemukan!
+                  Data Siswa Kosong!
                 </td>
               </tr>
             )}

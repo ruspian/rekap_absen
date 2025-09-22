@@ -89,9 +89,8 @@ export const DELETE = async (req, { params }) => {
     return NextResponse.json({ message: "Akses Ditolak!" }, { status: 401 });
   }
 
-  const { id } = params;
-
   try {
+    const { id } = await params;
     const siswa = await prisma.siswa.delete({
       where: {
         id: id,
