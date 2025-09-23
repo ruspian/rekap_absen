@@ -5,7 +5,6 @@ import Link from "next/link";
 
 function TableSiswa({ data, onDelete }) {
   const [kelas] = data;
-  console.log(kelas);
 
   return (
     <div className="bg-background max-w-[1200px] mx-auto rounded-md shadow-md border">

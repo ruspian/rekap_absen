@@ -13,7 +13,7 @@ const LoginButton = ({ children }) => {
   // jika login berhasil
   useEffect(() => {
     // cek status dan sesi
-    if ((status === "authenticated" && session) !== null) {
+    if (status === "authenticated" && session !== null) {
       router.push("/dashboard"); // arahkan ke halaman dashboard
     }
   }, [status, session]); // muat ulang saat session atau status berubah

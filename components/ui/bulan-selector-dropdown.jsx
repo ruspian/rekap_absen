@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Check } from "lucide-react";
-import { singkatanJurusan } from "@/lib/singkatan";
 
-export const KelasDropdown = ({ data, value, onChange }) => {
+export const BulanDropdown = ({ data, value, onChange }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -18,9 +17,8 @@ export const KelasDropdown = ({ data, value, onChange }) => {
   }, []);
 
   // cari kelas yang dipilih
-  const selected = data.find((k) => k.id === value) || {
-    nama_kelas: "Pilih Kelas",
-    jurusan: "",
+  const selected = data.find((b) => b.id === value) || {
+    namaBulan: "Pilih Bulan",
   };
 
   return (
@@ -36,9 +34,7 @@ export const KelasDropdown = ({ data, value, onChange }) => {
           "hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all"
         )}
       >
-        <span>
-          {`${selected.nama_kelas} ${singkatanJurusan(selected.jurusan)}`}
-        </span>
+        <span>{selected.namaBulan}</span>
         <ChevronDown className="h-4 w-4" />
       </button>
 
@@ -55,18 +51,18 @@ export const KelasDropdown = ({ data, value, onChange }) => {
           {/* Semua kelas */}
           <button
             onClick={() => {
-              onChange("Pilih Kelas");
+              onChange("Pilih Bulan");
               setOpen(false);
             }}
             className={cn(
               "flex items-center gap-2 w-full px-3 py-2 text-sm text-left transition-colors",
-              value === "Pilih Kelas"
+              value === "Pilih Bulan"
                 ? "font-semibold text-blue-600 dark:text-blue-400"
                 : "text-gray-800 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-800"
             )}
           >
-            <span className="flex-1">Pilih Kelas</span>
-            {value === "Pilih Kelas" && (
+            <span className="flex-1">Pilih Bulan</span>
+            {value === "Pilih Bulan" && (
               <Check className="h-4 w-4 text-blue-500 dark:text-blue-400" />
             )}
           </button>
@@ -85,9 +81,7 @@ export const KelasDropdown = ({ data, value, onChange }) => {
                   : "text-gray-800 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-800"
               )}
             >
-              <span className="flex-1">{`${item.nama_kelas} ${singkatanJurusan(
-                item.jurusan
-              )}`}</span>
+              <span className="flex-1">{item.namaBulan}</span>
               {value === item.id && (
                 <Check className="h-4 w-4 text-blue-500 dark:text-blue-400" />
               )}

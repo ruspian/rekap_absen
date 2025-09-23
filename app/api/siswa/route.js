@@ -9,7 +9,7 @@ export const POST = async (req) => {
     const session = await auth();
 
     // pastikan user login dan role admin
-    if (!session && session.user.role !== "admin") {
+    if (!session || session.user.role !== "admin") {
       return new NextResponse(JSON.stringify({ message: "Akses Ditolak!" }), {
         status: 401,
       });

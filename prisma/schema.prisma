@@ -173,7 +173,7 @@ model Minggu {
 
   bulanId String
   bulan   Bulan  @relation(fields: [bulanId], references: [id], onDelete: Cascade)
-
+  rekap_kehadiran RekapKehadiran[]
   // Kombinasi bulan dan nomor minggu harus unik
   @@unique([bulanId, nomorMinggu])
 }
@@ -215,8 +215,12 @@ model RekapKehadiran {
   alfa        Int?
   siswaId     String
   siswa       Siswa @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  mingguId    String
+  minggu      Minggu @relation(fields: [mingguId], references: [id], onDelete: Cascade)
   bulanId     String
   bulan       Bulan @relation(fields: [bulanId], references: [id], onDelete: Cascade)
+
+  @@unique([siswaId, mingguId]) // Kombinasi siswaId dan mingguId harus unik
 }
 
 // MODEL WALI KELAS

@@ -6,7 +6,7 @@ import { Prisma } from "@prisma/client";
 // AMBIL DATA SISWA BERDASARKAN ID
 export const GET = async (req, { params }) => {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // cari data siswa berdasarkan id
     const siswa = await prisma.siswa.findUnique({
@@ -43,7 +43,7 @@ export const PUT = async (req, { params }) => {
   }
 
   //   ambil id dari params
-  const { id } = params;
+  const { id } = await params;
 
   try {
     const body = await req.json();
