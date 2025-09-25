@@ -42,11 +42,11 @@ export const GET = async (req) => {
       return acc;
     }, {});
 
-    return new Response(JSON.stringify(Object.values(grouped)), {
+    return new NextResponse(JSON.stringify(Object.values(grouped)), {
       status: 200,
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new NextResponse(JSON.stringify({ error: error.message }), {
       status: 500,
     });
   }
@@ -56,6 +56,14 @@ export const GET = async (req) => {
 export const POST = async (req) => {
   try {
     const body = await req.json();
+    const session = await auth();
+
+    // pastikan user login dan role admin
+    if (!session || session.user.role !== "admin") {
+      return new NextResponse(JSON.stringify({ message: "Akses Ditolak!" }), {
+        status: 401,
+      });
+    }
     const { siswaId, bulanId, minggu } = body;
 
     // proses semua minggu
@@ -85,12 +93,12 @@ export const POST = async (req) => {
       )
     );
 
-    return new Response(JSON.stringify({ success: true, data: results }), {
+    return new NextResponse(JSON.stringify({ success: true, data: results }), {
       status: 200,
     });
   } catch (err) {
     console.error(err);
-    return new Response(JSON.stringify({ error: String(err) }), {
+    return new NextResponse(JSON.stringify({ error: String(err) }), {
       status: 500,
     });
   }

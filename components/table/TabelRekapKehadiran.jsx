@@ -1,17 +1,19 @@
 "use client";
 
+import { useToaster } from "@/providers/ToasterProvider";
 import React, { useEffect, useState } from "react";
 
 export default function TabelRekapKehadiran({
   data: initialData,
   namaKelas,
+  jurusan,
   namaBulan,
   bulan,
   minggu = [],
 }) {
   const [data, setData] = useState([]);
 
-  console.log("minggu", minggu);
+  const toaster = useToaster();
 
   // fallback 4 minggu jika tidak ada data minggu
   const defaultWeeks = Array.from({ length: 4 }, (_, i) => ({
@@ -56,8 +58,9 @@ export default function TabelRekapKehadiran({
 
   // Handle perubahan input angka
   const handleChange = (index, nomorMinggu, field, value) => {
+    // simpan perubahan di state
     setData((prev) => {
-      const copy = [...prev];
+      const copy = [...prev]; // copy array
       copy[index] = {
         ...copy[index],
         minggu: {
@@ -75,6 +78,7 @@ export default function TabelRekapKehadiran({
   // Simpan data ke API
   const handleSave = async (rekap) => {
     try {
+      // buat payload untuk dikirim ke API
       const payload = {
         siswaId: rekap.siswa?.id,
         bulanId: bulan?.id,
@@ -89,9 +93,8 @@ export default function TabelRekapKehadiran({
         }),
       };
 
-      console.log("Payload yang dikirim:", payload);
-
-      const res = await fetch("/api/rekap", {
+      // Kirim data ke API
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rekap`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -103,9 +106,21 @@ export default function TabelRekapKehadiran({
       }
 
       const result = await res.json();
-      console.log("Sukses:", result);
+      toaster.current?.show({
+        title: "Sukses!",
+        message: result.message || "Berhasil menyimpan data.",
+        variant: "success",
+        duration: 5000,
+        position: "top-center",
+      });
     } catch (err) {
-      console.error("Error saat simpan:", err);
+      toaster.current?.show({
+        title: "Gagal!",
+        message: err.message || "Terjadi kesalahan.",
+        variant: "error",
+        duration: 5000,
+        position: "top-center",
+      });
     }
   };
 
@@ -120,10 +135,9 @@ export default function TabelRekapKehadiran({
               className="text-center font-bold text-lg py-3 bg-slate-100"
             >
               REKAP KEHADIRAN SISWA{" "}
-              {namaKelas ? `KELAS ${namaKelas.toUpperCase()}` : ""} -{" "}
-              {namaBulan?.toUpperCase() ||
-                bulan?.namaBulan?.toUpperCase() ||
-                "BULAN"}
+              {namaKelas && jurusan
+                ? `KELAS ${namaKelas.toUpperCase()} ${jurusan.toUpperCase()}`
+                : ""}
             </th>
           </tr>
 
@@ -137,10 +151,10 @@ export default function TabelRekapKehadiran({
             </th>
 
             <th colSpan={weeksCount * 3 + 3} className="border px-2 py-2">
-              {bulan?.namaBulan?.toUpperCase() || "BULAN"}
+              {namaBulan || "BULAN"}
             </th>
 
-            <th rowSpan={3} className="border px-2 py-2">
+            <th rowSpan={3} className="border px-2 py-2 print-hidden">
               Aksi
             </th>
           </tr>
@@ -234,10 +248,10 @@ export default function TabelRekapKehadiran({
                   <td className="text-center border px-2 py-1">{totalSakit}</td>
 
                   {/* Aksi */}
-                  <td className="border px-2 py-1 text-center">
+                  <td className="border px-2 py-1 text-center print-hidden">
                     <button
                       onClick={() => handleSave(rekap)}
-                      className="px-2 py-1 bg-emerald-500 text-white rounded text-xs"
+                      className="px-2 py-1 bg-emerald-500 text-white rounded text-xs cursor-pointer hover:bg-emerald-600 disabled:opacity-50"
                     >
                       Simpan
                     </button>

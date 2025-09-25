@@ -6,6 +6,7 @@ import { BulanDropdown } from "@/components/ui/bulan-selector-dropdown";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
 import { KelasDropdown } from "@/components/ui/kelas-selector-dropdown";
 import { getBulan, getKelas, getMinggu, getSiswa } from "@/lib/data";
+import { handleDownloadExcelRekapKehadiran } from "@/lib/downloadExcel";
 import { useToaster } from "@/providers/ToasterProvider";
 import { FileChartColumnIncreasing, FileDown, Printer } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -23,6 +24,9 @@ const RekapAbsenPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toaster = useToaster();
   const tableRef = useRef();
+
+  const selectedKelas = dataKelas.find((k) => k.id === kelasFilter);
+  const selectedBulan = dataBulan.find((b) => b.id === bulanFilter);
 
   // Ambil data awal kelas & bulan
   useEffect(() => {
@@ -77,53 +81,23 @@ const RekapAbsenPage = () => {
 
   // Print
   const handlePrint = useReactToPrint({
-    content: () => tableRef.current,
-    documentTitle: "Rekap Kehadiran Siswa",
+    contentRef: tableRef,
+    documentTitle: "Data Rekap Kehadiran",
   });
-
-  // Export Excel
-  const handleDownloadExcel = () => {
-    const cleanData = rekapKehadiran.map((item, i) => {
-      // Flatten minggu agar jadi kolom Excel
-      const mingguData = {};
-      dataMinggu.forEach((m) => {
-        const nilai = item.minggu[m.nomorMinggu] || {
-          sakit: 0,
-          izin: 0,
-          alfa: 0,
-        };
-        mingguData[`M${m.nomorMinggu}_Sakit`] = nilai.sakit;
-        mingguData[`M${m.nomorMinggu}_Izin`] = nilai.izin;
-        mingguData[`M${m.nomorMinggu}_Alfa`] = nilai.alfa;
-      });
-
-      return {
-        No: i + 1,
-        Nama: item.siswa?.nama || "-",
-        Kelas: item.siswa?.kelas?.nama_kelas || "-",
-        Bulan: item.bulan?.namaBulan || "-",
-        ...mingguData,
-      };
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(cleanData);
-    worksheet["!cols"] = [{ wch: 5 }, { wch: 30 }, { wch: 15 }, { wch: 15 }];
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Kehadiran");
-    XLSX.writeFile(workbook, "rekap-kehadiran.xlsx");
-  };
 
   const Icons = [
     { Icon: Printer, onClick: handlePrint, className: "hover:bg-accent" },
     {
       Icon: FileDown,
-      onClick: handleDownloadExcel,
+      onClick: () =>
+        handleDownloadExcelRekapKehadiran(
+          dataMinggu,
+          rekapKehadiran,
+          selectedBulan
+        ),
       className: "hover:bg-accent",
     },
   ];
-
-  const selectedKelas = dataKelas.find((k) => k.id === kelasFilter);
-  const selectedBulan = dataBulan.find((b) => b.id === bulanFilter);
 
   return (
     <div>
@@ -161,6 +135,7 @@ const RekapAbsenPage = () => {
             minggu={dataMinggu}
             data={rekapKehadiran}
             namaKelas={selectedKelas?.nama_kelas}
+            jurusan={selectedKelas?.jurusan}
             namaBulan={selectedBulan?.namaBulan}
             bulan={selectedBulan}
           />

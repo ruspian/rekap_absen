@@ -5,7 +5,7 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
 import { KelasDropdown } from "@/components/ui/kelas-selector-dropdown";
 import { getKelas, getSiswa } from "@/lib/data";
-import { handleDownloadExcelDataSiswa } from "@/lib/downloadExcelDataSiswa";
+import { handleDownloadExcelDataSiswa } from "@/lib/downloadExcel";
 import { useToaster } from "@/providers/ToasterProvider";
 import { BookUser, FileDown, Printer, UserPlus } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
