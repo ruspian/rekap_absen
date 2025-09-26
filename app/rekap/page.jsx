@@ -11,7 +11,6 @@ import { useToaster } from "@/providers/ToasterProvider";
 import { FileChartColumnIncreasing, FileDown, Printer } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import * as XLSX from "xlsx";
 
 const RekapAbsenPage = () => {
   const [dataKelas, setDataKelas] = useState([]);

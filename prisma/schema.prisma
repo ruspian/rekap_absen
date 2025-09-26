@@ -102,6 +102,7 @@ model Siswa {
   pembinaan_wali PembinaanWali[]
   pembinaan_kasus PembinaanKasus[]
   rekap_kehadiran RekapKehadiran[]
+  bakatMinat BakatDanMinat[]
 }
 
 // MODEL KELAS
@@ -119,7 +120,10 @@ model Kelas {
 model BakatDanMinat {
   id          String          @id @default(cuid())
   bakat       String?
-  minat       String?
+  keterangan       String?
+
+  siswaId     String
+  siswa       Siswa @relation(fields: [siswaId], references: [id], onDelete: Cascade)
 }
 
 // MODEL PEMBINAAN WALI
