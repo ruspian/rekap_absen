@@ -134,6 +134,7 @@ model PembinaanWali {
   tanggapan_siswa String?
   arahan     String?
   kesepakatan String?
+  no_surat String?
 
   siswaId     String
   siswa       Siswa @relation(fields: [siswaId], references: [id], onDelete: Cascade)
@@ -148,6 +149,7 @@ model PembinaanKasus {
   tanggapan_siswa String?
   arahan     String?
   kesepakatan String?
+  no_surat String?
 
   siswaId     String
   siswa       Siswa @relation(fields: [siswaId], references: [id], onDelete: Cascade)

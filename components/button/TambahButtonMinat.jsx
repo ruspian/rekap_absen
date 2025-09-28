@@ -13,7 +13,6 @@ import { useState } from "react";
 
 const TambahButtonMinat = ({ siswa }) => {
   const [open, setOpen] = useState(false);
-  const [bakatToEdit, setBakatToEdit] = useState(null);
 
   const toaster = useToaster();
   const { register, handleSubmit, resetField } = useForm();
