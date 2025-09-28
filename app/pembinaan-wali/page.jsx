@@ -12,7 +12,7 @@ import {
 } from "@/lib/data";
 import { handleDownloadExcelPembinaanWali } from "@/lib/downloadExcel";
 import { useToaster } from "@/providers/ToasterProvider";
-import { FileDown, Lightbulb, Printer } from "lucide-react";
+import { FileDown, Printer, UsersRound } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 
@@ -86,8 +86,8 @@ const PembinaanWaliPage = () => {
       <Breadcrumb />
 
       <div className="my-10 flex gap-2 items-center">
-        <Lightbulb />
-        <h2 className="text-2xl font-semibold">BAKAT DAN MINAT SISWA</h2>
+        <UsersRound />
+        <h2 className="text-2xl font-semibold">PEMBINAAN WALI</h2>
       </div>
 
       <div className="flex items-center justify-between w-full">
