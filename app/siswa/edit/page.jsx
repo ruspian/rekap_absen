@@ -8,7 +8,7 @@ import { useToaster } from "@/providers/ToasterProvider";
 import { Pencil } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { get, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 const EditDataSiswaPage = () => {
   const [dataKelas, setDataKelas] = useState([]);

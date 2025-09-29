@@ -52,7 +52,11 @@ export const GET = async (req) => {
   try {
     const siswa = await prisma.siswa.findMany({
       include: {
-        kelas: true,
+        kelas: {
+          include: {
+            waliKelas: true,
+          },
+        },
       },
     });
     return new NextResponse(JSON.stringify(siswa), { status: 200 });

@@ -112,6 +112,7 @@ model Kelas {
   jurusan     String
   waliKelasId String
   siswa Siswa[]
+  inventaris Inventaris[]
 
   waliKelas WaliKelas @relation(fields: [waliKelasId], references: [id], onDelete: Cascade)
 }
@@ -156,11 +157,7 @@ model PembinaanKasus {
 
 }
 
-// ENUM KONDISI
-enum Kondisi {
-  Baik
-  Buruk
-}
+
 
 // MODEL INVENTARIS
 model Inventaris {
@@ -168,8 +165,11 @@ model Inventaris {
   nama        String?
   jumlah_awal Int?
   jumlah_akhir Int?
-  kondisi     Kondisi
+  baik     Int?
+  rusak     Int?
   keterangan  String?
+
+  kelas Kelas[]
 }
 
 // MODEL MINGGU
