@@ -6,15 +6,7 @@ import {
   SidebarWrapper,
 } from "@/components/sidebar/Sidebar";
 import AuthProvider from "@/providers/AuthProvider";
-import {
-  ClipboardList,
-  Drama,
-  FileCheck,
-  LayoutDashboard,
-  Sheet,
-  ShieldCheck,
-  SquareUser,
-} from "lucide-react";
+
 import { ToasterProvider } from "@/providers/ToasterProvider";
 
 const geistSans = Geist({
@@ -34,43 +26,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  const links = [
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: <LayoutDashboard size={30} strokeWidth={2.25} />,
-    },
-    {
-      label: "Data Siswa",
-      href: "/siswa",
-      icon: <SquareUser size={30} strokeWidth={2.25} />,
-    },
-    {
-      label: "Rekap Absensi",
-      href: "/rekap",
-      icon: <Sheet size={30} strokeWidth={2.25} />,
-    },
-    {
-      label: "Bakat & Minat",
-      href: "/bakat-minat",
-      icon: <Drama size={30} strokeWidth={2.25} />,
-    },
-    {
-      label: "Pembinaan Wali",
-      href: "/pembinaan-wali",
-      icon: <ClipboardList size={30} strokeWidth={2.25} />,
-    },
-    {
-      label: "Pembinaan Kasus",
-      href: "/pembinaan-kasus",
-      icon: <FileCheck size={30} strokeWidth={2.25} />,
-    },
-    {
-      label: "Inventaris",
-      href: "/inventaris",
-      icon: <ShieldCheck size={30} strokeWidth={2.25} />,
-    },
-  ];
   return (
     <html lang="en">
       <body
@@ -83,10 +38,8 @@ export default function RootLayout({ children }) {
               {/* Sidebar */}
               <SidebarWrapper>
                 <SidebarBody>
-                  <div className="flex flex-col gap-2">
-                    {links.map((link) => (
-                      <SidebarLink key={link.href} link={link} />
-                    ))}
+                  <div className="flex flex-col gap-2 justify-between">
+                    <SidebarLink />
                   </div>
                 </SidebarBody>
               </SidebarWrapper>

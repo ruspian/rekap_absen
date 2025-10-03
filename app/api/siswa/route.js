@@ -59,7 +59,16 @@ export const GET = async (req) => {
         },
       },
     });
-    return new NextResponse(JSON.stringify(siswa), { status: 200 });
+
+    const jumlahSiswa = await prisma.siswa.count();
+
+    const responseData = {
+      siswa: siswa,
+      jumlahSiswa: jumlahSiswa,
+    };
+    return new NextResponse(JSON.stringify(responseData), {
+      status: 200,
+    });
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Terjadi Kesalahan!" }), {
       status: 500,

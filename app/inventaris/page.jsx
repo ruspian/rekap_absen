@@ -81,6 +81,7 @@ const InventarisPage = () => {
 
   const selectedKelas = dataKelas?.find((k) => k.id === kelasFilter);
   const namaKelas = `${selectedKelas?.nama_kelas}_${selectedKelas?.jurusan}`;
+
   // FUNGSI PRINT
   const handlePrint = useReactToPrint({
     contentRef: tableRef,

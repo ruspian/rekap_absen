@@ -15,7 +15,11 @@ export const GET = async (req) => {
         ...(kelasId ? { siswa: { kelasId } } : {}),
       },
       include: {
-        siswa: { include: { kelas: true } },
+        siswa: {
+          include: {
+            kelas: true,
+          },
+        },
         bulan: true,
         minggu: true,
       },
@@ -32,13 +36,22 @@ export const GET = async (req) => {
           siswa: item.siswa,
           bulan: item.bulan,
           minggu: {},
+          total: { sakit: 0, izin: 0, alfa: 0 },
         };
       }
-      acc[siswaId].minggu[item.minggu.nomorMinggu] = {
-        sakit: item.sakit ?? 0,
-        izin: item.izin ?? 0,
-        alfa: item.alfa ?? 0,
-      };
+
+      const sakit = item?.sakit ?? 0;
+      const izin = item?.izin ?? 0;
+      const alfa = item?.alfa ?? 0;
+
+      // data per minggu
+      acc[siswaId].minggu[item.minggu.nomorMinggu] = { sakit, izin, alfa };
+
+      // hitung total
+      acc[siswaId].total.sakit += sakit;
+      acc[siswaId].total.izin += izin;
+      acc[siswaId].total.alfa += alfa;
+
       return acc;
     }, {});
 

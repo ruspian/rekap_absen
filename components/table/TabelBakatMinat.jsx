@@ -5,9 +5,6 @@ import EditButtonMinat from "@/components/button/EditButtonMinat";
 function TabelBakatMinat({ data, kepsek, bakat, onSuccess }) {
   const [kelas] = data;
 
-  console.log("data tabel bakat minat:", data);
-  console.log("data bakat minat:", bakat);
-
   return (
     <div className="bg-background max-w-[1200px] mx-auto rounded-md shadow-md border">
       {/* Wrapper biar bisa slide kalau overflow */}

@@ -4,8 +4,19 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { Button } from "../ui/button";
+import { signOut } from "next-auth/react";
+import {
+  ClipboardList,
+  Drama,
+  FileCheck,
+  LayoutDashboard,
+  Sheet,
+  ShieldCheck,
+  SquareUser,
+} from "lucide-react";
 
 const SidebarContext = createContext(undefined);
 
@@ -109,6 +120,7 @@ export const MobileSidebar = ({ className, children, ...props }) => {
               >
                 <X />
               </div>
+
               {children}
             </motion.div>
           )}
@@ -118,32 +130,108 @@ export const MobileSidebar = ({ className, children, ...props }) => {
   );
 };
 
-export const SidebarLink = ({ link, className, ...props }) => {
+export const SidebarLink = ({ className, ...props }) => {
   const { open, animate } = useSidebar();
+
+  const links = [
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+      icon: <LayoutDashboard size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Data Siswa",
+      href: "/siswa",
+      icon: <SquareUser size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Rekap Absensi",
+      href: "/rekap",
+      icon: <Sheet size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Bakat & Minat",
+      href: "/bakat-minat",
+      icon: <Drama size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Pembinaan Wali",
+      href: "/pembinaan-wali",
+      icon: <ClipboardList size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Pembinaan Kasus",
+      href: "/pembinaan-kasus",
+      icon: <FileCheck size={30} strokeWidth={2.25} />,
+    },
+    {
+      label: "Inventaris",
+      href: "/inventaris",
+      icon: <ShieldCheck size={30} strokeWidth={2.25} />,
+    },
+  ];
   return (
-    <Link
-      href={link.href}
-      className={cn(
-        "flex items-center justify-start gap-2 group/sidebar py-2 rounded-sm",
-        className
-      )}
-      {...props}
-    >
-      {link.icon}
-      <motion.span
-        animate={{
-          display: animate ? (open ? "inline-block" : "none") : "inline-block",
-          opacity: animate ? (open ? 1 : 0) : 1,
-        }}
-        className={`text-slate-900 dark:text-slate-50 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0`}
-      >
-        {link.label}
-      </motion.span>
-    </Link>
+    <div className="flex flex-col justify-between h-[550px] md:h-[650px]">
+      <div>
+        {links.map((link) => (
+          <Link
+            href={link.href}
+            key={link.href}
+            className={cn(
+              "flex items-center text-neutral-900 dark:text-neutral-50 justify-start gap-2 group/sidebar py-2 rounded-sm",
+              className
+            )}
+            {...props}
+          >
+            {link.icon}
+            <motion.span
+              animate={{
+                display: animate
+                  ? open
+                    ? "inline-block"
+                    : "none"
+                  : "inline-block",
+                opacity: animate ? (open ? 1 : 0) : 1,
+              }}
+              className={`text-slate-900 dark:text-slate-50 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0`}
+            >
+              {link.label}
+            </motion.span>
+          </Link>
+        ))}
+      </div>
+
+      <div className="">
+        <Button
+          onClick={() => signOut({ callbackUrl: "/" })}
+          variant="ghost"
+          className={cn(
+            "flex items-center text-neutral-900 dark:text-neutral-50 justify-start gap-2 group/sidebar py-2 rounded-sm",
+            className
+          )}
+          {...props}
+        >
+          <LogOut size={26} strokeWidth={2.25} />
+          <motion.span
+            animate={{
+              display: animate
+                ? open
+                  ? "inline-block"
+                  : "none"
+                : "inline-block",
+              opacity: animate ? (open ? 1 : 0) : 1,
+            }}
+            className={`text-slate-900 dark:text-slate-50 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0`}
+          >
+            Keluar
+          </motion.span>
+        </Button>
+      </div>
+    </div>
   );
 };
 
-// Wrapper khusus supaya bisa cek route
+// jangan tampilkan sidebar di halaman tertentu
 export const SidebarWrapper = ({ children }) => {
   const pathname = usePathname();
   const noSidebarRoutes = ["/", "/masuk"]; // daftar halaman tanpa sidebar
