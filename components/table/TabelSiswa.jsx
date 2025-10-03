@@ -3,9 +3,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { formatTanggal } from "@/lib/formatTanggal";
 import Link from "next/link";
 
-function TableSiswa({ data, onDelete }) {
-  const [kelas] = data;
-
+function TableSiswa({ initialData, onDelete }) {
   return (
     <div className="bg-background max-w-[1200px] mx-auto rounded-md shadow-md border">
       {/* Wrapper biar bisa slide kalau overflow */}
@@ -14,14 +12,17 @@ function TableSiswa({ data, onDelete }) {
           {/* Judul Utama */}
           <thead>
             <tr>
-              {kelas?.kelasId ? (
-                <th
-                  colSpan={11}
-                  className="text-center font-bold text-lg bg-slate-100 text-black py-3"
-                >
-                  DATA SISWA KELAS {kelas?.kelas?.nama_kelas}{" "}
-                  {kelas?.kelas?.jurusan.toUpperCase()}
-                </th>
+              {initialData && initialData.length > 0 ? (
+                initialData.map((siswa, index) => (
+                  <th
+                    key={siswa.id || index}
+                    colSpan={11}
+                    className="text-center font-bold text-lg bg-slate-100 text-black py-3"
+                  >
+                    DATA SISWA KELAS {siswa?.kelas?.nama_kelas}{" "}
+                    {siswa?.kelas?.jurusan.toUpperCase()}
+                  </th>
+                ))
               ) : (
                 <th
                   colSpan={11}
@@ -77,11 +78,11 @@ function TableSiswa({ data, onDelete }) {
 
           {/* Body */}
           <tbody>
-            {data.length ? (
-              data.map((siswa, i) => (
-                <tr key={siswa.id || i} className="hover:bg-slate-50">
+            {initialData && initialData.length > 0 ? (
+              initialData.map((siswa, index) => (
+                <tr key={siswa.id || index} className="hover:bg-slate-50">
                   <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {i + 1}
+                    {index + 1}
                   </td>
                   <td className="border px-2 py-1 text-center whitespace-nowrap">
                     {siswa.nama}

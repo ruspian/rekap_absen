@@ -14,17 +14,29 @@ import { useReactToPrint } from "react-to-print";
 const SiswaPage = () => {
   const [dataSiswa, setDataSiswa] = useState([]);
   const [dataKelas, setDataKelas] = useState([]);
-  const [kelasFilter, setKelasFilter] = useState("Pilih Kelas");
+  const [kelasFilter, setKelasFilter] = useState(""); // default kosong
   const toaster = useToaster();
-
   const tableRef = useRef();
 
+  // Fetch data siswa dan kelas
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [siswa, kelas] = await Promise.all([getSiswa(), getKelas()]);
-        setDataSiswa(siswa);
-        setDataKelas(kelas);
+        const [siswaResponse, kelasResponse] = await Promise.all([
+          getSiswa(),
+          getKelas(),
+        ]);
+
+        const siswaArray = Array.isArray(siswaResponse.siswa)
+          ? siswaResponse
+          : siswaResponse?.data || [];
+
+        const kelasArray = Array.isArray(kelasResponse)
+          ? kelasResponse
+          : kelasResponse?.data || [];
+
+        setDataSiswa(siswaArray);
+        setDataKelas(kelasArray);
       } catch (error) {
         toaster.current?.show({
           title: "Error",
@@ -39,32 +51,36 @@ const SiswaPage = () => {
     fetchData();
   }, [toaster]);
 
-  // FILTER DATA SISWA BERDASARKAN KELAS
-  const filteredData =
-    kelasFilter === "Pilih Kelas"
-      ? dataSiswa
-      : dataSiswa.filter((s) => String(s.kelasId) === String(kelasFilter));
+  // Filter siswa berdasarkan kelas
+  const filteredData = React.useMemo(() => {
+    if (!kelasFilter) return null; // jika belum pilih kelas, kembalikan null
 
-  // FUNGSI PRINT
+    return dataSiswa.siswa.filter((s) => {
+      // cocokkan berdasarkan kelasId atau nested object
+      const siswaKelasId =
+        s.kelasId || s.kelas?.id || s.siswa?.kelasId || s.siswa?.kelas?.id;
+
+      return String(siswaKelasId) === String(kelasFilter);
+    });
+  }, [kelasFilter, dataSiswa]);
+
+  // Print handler
   const handlePrint = useReactToPrint({
     contentRef: tableRef,
     documentTitle: "Data Siswa",
   });
 
-  // fungsi hapus data siswa
+  // Delete siswa
   const handleDelete = async (id) => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/siswa/${id}`,
         {
           method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
-      // jika gagal
       if (!response.ok) {
         toaster.current?.show({
           title: "Waduh!",
@@ -76,8 +92,7 @@ const SiswaPage = () => {
         return;
       }
 
-      // set data siswa yang sudah dihapus
-      setDataSiswa((prevData) => prevData.filter((siswa) => siswa.id !== id));
+      setDataSiswa((prev) => prev.filter((s) => s.id !== id));
 
       toaster.current?.show({
         title: "Sukses!",
@@ -86,24 +101,24 @@ const SiswaPage = () => {
         duration: 5000,
         position: "top-center",
       });
-    } catch (error) {}
+    } catch (error) {
+      toaster.current?.show({
+        title: "Gagal!",
+        message: "Gagal menghapus data.",
+        variant: "error",
+        duration: 5000,
+        position: "top-center",
+      });
+    }
   };
 
-  // ICON TOMBOL
+  // Floating button icons
   const Icons = [
-    {
-      Icon: UserPlus,
-      href: "/siswa/tambah",
-      className: "hover:bg-accent",
-    },
-    {
-      Icon: Printer,
-      className: "hover:bg-accent",
-      onClick: handlePrint,
-    },
+    { Icon: UserPlus, href: "/siswa/tambah", className: "hover:bg-accent" },
+    { Icon: Printer, className: "hover:bg-accent", onClick: handlePrint },
     {
       Icon: FileDown,
-      onClick: () => handleDownloadExcelDataSiswa(dataSiswa),
+      onClick: () => handleDownloadExcelDataSiswa(filteredData),
       className: "hover:bg-accent",
     },
   ];
@@ -132,7 +147,7 @@ const SiswaPage = () => {
       </div>
 
       <div ref={tableRef}>
-        <TableSiswa data={filteredData} onDelete={handleDelete} />
+        <TableSiswa initialData={filteredData} onDelete={handleDelete} />
       </div>
     </div>
   );

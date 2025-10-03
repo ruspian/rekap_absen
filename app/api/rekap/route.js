@@ -49,8 +49,6 @@ export const GET = async (req) => {
       return acc;
     }, {});
 
-    console.log("grouped", Object.values(grouped));
-
     return NextResponse.json(Object.values(grouped), { status: 200 });
   } catch (error) {
     console.error(error);
