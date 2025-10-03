@@ -9,59 +9,52 @@ export const GET = async (req) => {
   const bulanId = searchParams.get("bulanId");
 
   try {
+    const whereClause = {};
+    if (bulanId) whereClause.bulanId = bulanId;
+    if (kelasId) whereClause.siswa = { kelasId };
+
     const rawData = await prisma.rekapKehadiran.findMany({
-      where: {
-        ...(bulanId ? { bulanId } : {}),
-        ...(kelasId ? { siswa: { kelasId } } : {}),
-      },
+      where: whereClause,
       include: {
-        siswa: {
-          include: {
-            kelas: true,
-          },
-        },
+        siswa: { include: { kelas: true } },
         bulan: true,
         minggu: true,
       },
-      orderBy: {
-        siswa: { nama: "asc" },
-      },
+      orderBy: [{ siswa: { nama: "asc" } }, { minggu: { nomorMinggu: "asc" } }],
     });
 
-    // Group per siswa → jadi satu baris, minggu jadi kolom
+    if (rawData.length === 0) {
+      return NextResponse.json([], { status: 200 });
+    }
+
+    // Grouping per siswa
     const grouped = rawData.reduce((acc, item) => {
-      const siswaId = item.siswa.id;
-      if (!acc[siswaId]) {
-        acc[siswaId] = {
+      const id = item.siswa.id;
+      if (!acc[id]) {
+        acc[id] = {
           siswa: item.siswa,
           bulan: item.bulan,
           minggu: {},
           total: { sakit: 0, izin: 0, alfa: 0 },
         };
       }
-
-      const sakit = item?.sakit ?? 0;
-      const izin = item?.izin ?? 0;
-      const alfa = item?.alfa ?? 0;
-
-      // data per minggu
-      acc[siswaId].minggu[item.minggu.nomorMinggu] = { sakit, izin, alfa };
-
-      // hitung total
-      acc[siswaId].total.sakit += sakit;
-      acc[siswaId].total.izin += izin;
-      acc[siswaId].total.alfa += alfa;
-
+      acc[id].minggu[item.minggu.nomorMinggu] = {
+        sakit: item.sakit ?? 0,
+        izin: item.izin ?? 0,
+        alfa: item.alfa ?? 0,
+      };
+      acc[id].total.sakit += item.sakit ?? 0;
+      acc[id].total.izin += item.izin ?? 0;
+      acc[id].total.alfa += item.alfa ?? 0;
       return acc;
     }, {});
 
-    return new NextResponse(JSON.stringify(Object.values(grouped)), {
-      status: 200,
-    });
+    console.log("grouped", Object.values(grouped));
+
+    return NextResponse.json(Object.values(grouped), { status: 200 });
   } catch (error) {
-    return new NextResponse(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+    console.error(error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };
 

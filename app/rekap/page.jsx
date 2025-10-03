@@ -46,6 +46,8 @@ const RekapAbsenPage = () => {
           title: "Error",
           message: String(error),
           variant: "error",
+          duration: 5000,
+          position: "top-center",
         });
       }
     };
@@ -70,6 +72,8 @@ const RekapAbsenPage = () => {
           title: "Error",
           message: String(error),
           variant: "error",
+          duration: 5000,
+          position: "top-center",
         });
       } finally {
         setIsLoading(false);
@@ -137,6 +141,7 @@ const RekapAbsenPage = () => {
             jurusan={selectedKelas?.jurusan}
             namaBulan={selectedBulan?.namaBulan}
             bulan={selectedBulan}
+            dataSiswa={dataSiswa}
           />
         )}
       </div>
