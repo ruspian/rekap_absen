@@ -14,7 +14,7 @@ import { useReactToPrint } from "react-to-print";
 const SiswaPage = () => {
   const [dataSiswa, setDataSiswa] = useState([]);
   const [dataKelas, setDataKelas] = useState([]);
-  const [kelasFilter, setKelasFilter] = useState(""); // default kosong
+  const [kelasFilter, setKelasFilter] = useState("");
   const toaster = useToaster();
   const tableRef = useRef();
 

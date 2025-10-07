@@ -1,17 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Pencil, SquarePlus } from "lucide-react";
+import { Pencil } from "lucide-react";
 import {
   MorphingPopover,
   MorphingPopoverContent,
   MorphingPopoverTrigger,
 } from "../ui/morphing-popover";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useToaster } from "@/providers/ToasterProvider";
 import { useEffect, useState } from "react";
 
-const EditButtonMinat = ({ bakat, onSuccess }) => {
+const EditButtonMinat = ({ bakat, siswa, onSuccess }) => {
   const [open, setOpen] = useState(false);
 
   const toaster = useToaster();
@@ -98,7 +98,7 @@ const EditButtonMinat = ({ bakat, onSuccess }) => {
 
         <MorphingPopoverContent>
           <h2 className="text-lg font-semibold mb-4">
-            Edit Minat {bakat.siswa.nama}
+            Edit Minat {siswa.nama}
           </h2>
           <form
             onSubmit={handleSubmit(onSubmit)}

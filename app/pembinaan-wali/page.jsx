@@ -13,7 +13,7 @@ import {
 import { handleDownloadExcelPembinaanWali } from "@/lib/downloadExcel";
 import { useToaster } from "@/providers/ToasterProvider";
 import { FileDown, Printer, UsersRound } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 
 const PembinaanWaliPage = () => {
@@ -35,8 +35,22 @@ const PembinaanWaliPage = () => {
         getKepalaSekolah(),
         getPembinaanWali(),
       ]);
-      setDataSiswa(siswa);
-      setDataKelas(kelas);
+
+      // deteksi bentuk data siswa
+      const siswaArray = Array.isArray(siswa)
+        ? siswa
+        : Array.isArray(siswa?.siswa)
+        ? siswa.siswa
+        : [];
+
+      const kelasArray = Array.isArray(kelas)
+        ? kelas
+        : Array.isArray(kelas?.data)
+        ? kelas.data
+        : [];
+
+      setDataSiswa(siswaArray);
+      setDataKelas(kelasArray);
       setDataKepsek(kepsek);
       setDataPembinaanWali(pembinaanWali);
     } catch (error) {
@@ -53,13 +67,17 @@ const PembinaanWaliPage = () => {
   // panggil fetchData saat komponen mount
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [toaster]);
 
   // FILTER DATA SISWA BERDASARKAN KELAS
-  const filteredData =
-    kelasFilter === "Pilih Kelas"
-      ? dataSiswa
-      : dataSiswa.filter((s) => String(s.kelasId) === String(kelasFilter));
+  const filteredData = useMemo(() => {
+    if (!kelasFilter || kelasFilter === "Pilih Kelas") return [];
+    return dataSiswa.filter((s) => {
+      const siswaKelasId =
+        s.kelasId || s.kelas?.id || s.siswa?.kelasId || s.siswa?.kelas?.id;
+      return String(siswaKelasId) === String(kelasFilter);
+    });
+  }, [kelasFilter, dataSiswa]);
 
   // FUNGSI PRINT
   const handlePrint = useReactToPrint({

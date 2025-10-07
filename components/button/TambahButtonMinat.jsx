@@ -11,7 +11,7 @@ import { set, useForm } from "react-hook-form";
 import { useToaster } from "@/providers/ToasterProvider";
 import { useState } from "react";
 
-const TambahButtonMinat = ({ siswa }) => {
+const TambahButtonMinat = ({ siswa, onSuccess }) => {
   const [open, setOpen] = useState(false);
 
   const toaster = useToaster();
@@ -62,6 +62,10 @@ const TambahButtonMinat = ({ siswa }) => {
       // hapus field input
       resetField("bakatMinat");
       resetField("keterangan");
+
+      if (onSuccess) {
+        onSuccess();
+      }
 
       // tutup popover
       setOpen(false);

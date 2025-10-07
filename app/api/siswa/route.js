@@ -57,6 +57,7 @@ export const GET = async (req) => {
             waliKelas: true,
           },
         },
+        bakatMinat: true,
       },
     });
 

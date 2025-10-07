@@ -27,7 +27,7 @@ const RekapAbsenPage = () => {
   const selectedKelas = dataKelas.find((k) => k.id === kelasFilter);
   const selectedBulan = dataBulan.find((b) => b.id === bulanFilter);
 
-  // Ambil data awal kelas & bulan
+  // Ambil data awal
   useEffect(() => {
     const fetchData = async () => {
       try {
