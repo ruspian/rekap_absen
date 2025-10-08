@@ -1,8 +1,7 @@
 import { singkatanJurusan } from "@/lib/singkatan";
-import TambahPembinaanWaliButton from "../button/TambahPembinaanWaliButton";
 import { formatTanggal } from "@/lib/formatTanggal";
 
-function TabelPembinaanWali({ data, pembinaanWali }) {
+function TabelPembinaanWali({ data }) {
   const [kelas] = data;
 
   return (
@@ -73,12 +72,6 @@ function TabelPembinaanWali({ data, pembinaanWali }) {
           <tbody>
             {data ? (
               data.map((siswa, i) => {
-                // tentukan jumlah baris
-                const rowCount =
-                  siswa.pembinaan_wali?.length > 0
-                    ? siswa.pembinaan_wali.length
-                    : 1;
-
                 // jika siswa tidak ada binaan wali
                 if (
                   siswa.pembinaan_wali.length === 0 ||
@@ -126,7 +119,7 @@ function TabelPembinaanWali({ data, pembinaanWali }) {
 
                 // jika ada binaan wali
                 return siswa.pembinaan_wali.map((binaanWali, i) => (
-                  <tr key={pembinaanWali.id || i} className="hover:bg-slate-50">
+                  <tr key={binaanWali.id || i} className="hover:bg-slate-50">
                     <td className="border px-2 py-1 text-center whitespace-nowrap">
                       {i + 1}
                     </td>

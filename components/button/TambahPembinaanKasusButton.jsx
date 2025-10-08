@@ -9,27 +9,16 @@ import {
 } from "../ui/morphing-popover";
 import { useForm } from "react-hook-form";
 import { useToaster } from "@/providers/ToasterProvider";
-import { useEffect, useState } from "react";
+import { formatToYyyyMmDd } from "@/lib/formatTanggal";
 
-const TambahPembinaanKasusButton = ({ siswa, onSuccess }) => {
-  const [open, setOpen] = useState(false);
-
+const TambahPembinaanKasusButton = ({ siswa, onSuccess, open, setOpen }) => {
   const toaster = useToaster();
   const { register, handleSubmit, reset } = useForm();
 
-  // isi form nama siswa
-  useEffect(() => {
-    if (open && siswa) {
-      reset({
-        nama: siswa.nama,
-      });
-    }
-  }, [open, siswa, reset]); // mount ulang saat dependency berubah
-
   const onSubmit = async (data) => {
     const payload = {
-      siswaId: siswa.id,
-      tanggal: data.tanggal,
+      siswaId: data.siswaId,
+      tanggal: formatToYyyyMmDd(data.tanggal),
       uraian_kejadian: data.uraian_kejadian,
       tanggapan_siswa: data.tanggapan_siswa,
       arahan: data.arahan,
@@ -119,12 +108,19 @@ const TambahPembinaanKasusButton = ({ siswa, onSuccess }) => {
 
             {/* nama */}
             <div>
-              <input
-                {...register("nama")}
+              <select
+                {...register("siswaId")}
                 className="border rounded-sm p-2 w-full"
-                placeholder="Masukkan Keterangan"
-                disabled
-              />
+              >
+                <option value="" className="text-gray-400">
+                  Pilih Siswa
+                </option>
+                {siswa.map((isSiswa) => (
+                  <option value={isSiswa.id} key={isSiswa.id}>
+                    {isSiswa.nama}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* uraian */}

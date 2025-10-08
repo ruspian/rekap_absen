@@ -59,6 +59,7 @@ export const GET = async (req) => {
         },
         bakatMinat: true,
         pembinaan_wali: true,
+        pembinaan_kasus: true,
       },
     });
 

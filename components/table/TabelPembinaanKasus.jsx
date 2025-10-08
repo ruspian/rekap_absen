@@ -1,7 +1,8 @@
 import { formatTanggal } from "@/lib/formatTanggal";
-import TambahPembinaanKasusButton from "@/components/button/TambahPembinaanKasusButton";
 
-function TabelPembinaanKasus({ data, pembinaanKasus, onSuccess }) {
+function TabelPembinaanKasus({ data }) {
+  console.log("data", data);
+
   return (
     <div className="bg-background max-w-[1200px] mx-auto rounded-md shadow-md border">
       {/* Wrapper biar bisa slide kalau overflow */}
@@ -58,60 +59,83 @@ function TabelPembinaanKasus({ data, pembinaanKasus, onSuccess }) {
               <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
                 Keterangan
               </th>
-
-              <th
-                className="border px-2 py-2 whitespace-nowrap print-hidden"
-                rowSpan={2}
-              >
-                Aksi
-              </th>
             </tr>
           </thead>
 
           {/* Body */}
           <tbody>
-            {data.length ? (
-              pembinaanKasus.map((binaanKasus, i) => (
-                <tr key={binaanKasus.id || i} className="hover:bg-slate-50">
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {i + 1}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {formatTanggal(binaanKasus.tanggal)}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanKasus.siswa.nama}
-                  </td>
+            {data ? (
+              data.map((siswa, i) => {
+                if (
+                  siswa.pembinaan_kasus.length === 0 ||
+                  !siswa.pembinaan_kasus
+                ) {
+                  return (
+                    <tr key={siswa.id || i} className="hover:bg-slate-50">
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {i + 1}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {siswa.nama}
+                      </td>
 
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanKasus.uraian_kejadian}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanKasus.tanggapan_siswa}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanKasus.arahan}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanKasus.kesepakatan}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {""}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {""}
-                  </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                    </tr>
+                  );
+                }
+                return siswa.pembinaan_kasus.map((binaanKasus, i) => (
+                  <tr key={binaanKasus.id || i} className="hover:bg-slate-50">
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {i + 1}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {formatTanggal(binaanKasus.tanggal)}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {siswa.nama}
+                    </td>
 
-                  <td className="border px-2 py-1 text-center print-hidden">
-                    <div className="flex gap-2 items-center justify-center">
-                      <TambahPembinaanKasusButton
-                        siswa={binaanKasus.siswa}
-                        onSuccess={onSuccess}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {binaanKasus.uraian_kejadian}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {binaanKasus.tanggapan_siswa}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {binaanKasus.arahan}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {binaanKasus.kesepakatan}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {""}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {""}
+                    </td>
+                  </tr>
+                ));
+              })
             ) : (
               <tr>
                 <td

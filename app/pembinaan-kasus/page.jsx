@@ -1,5 +1,6 @@
 "use client";
 
+import TambahPembinaanKasusButton from "@/components/button/TambahPembinaanKasusButton";
 import { TabelPembinaanKasus } from "@/components/table/TabelPembinaanKasus";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
@@ -12,8 +13,8 @@ import {
 } from "@/lib/data";
 import { handleDownloadExcelPembinaanKasus } from "@/lib/downloadExcel";
 import { useToaster } from "@/providers/ToasterProvider";
-import { FileDown, Printer, Target } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { FileDown, FilePlus2, Printer, Target } from "lucide-react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 
 const PembinaanKasusPage = () => {
@@ -22,6 +23,7 @@ const PembinaanKasusPage = () => {
   const [dataKepsek, setDataKepsek] = useState(null);
   const [dataPembinaanKasus, setDataPembinaanKasus] = useState([]);
   const [kelasFilter, setKelasFilter] = useState("Pilih Kelas");
+  const [open, setOpen] = useState(false);
   const toaster = useToaster();
 
   const tableRef = useRef();
@@ -35,8 +37,22 @@ const PembinaanKasusPage = () => {
         getKepalaSekolah(),
         getPembinaanKasus(),
       ]);
-      setDataSiswa(siswa);
-      setDataKelas(kelas);
+
+      // deteksi bentuk data siswa
+      const siswaArray = Array.isArray(siswa)
+        ? siswa
+        : Array.isArray(siswa?.siswa)
+        ? siswa.siswa
+        : [];
+
+      const kelasArray = Array.isArray(kelas)
+        ? kelas
+        : Array.isArray(kelas?.data)
+        ? kelas.data
+        : [];
+
+      setDataSiswa(siswaArray);
+      setDataKelas(kelasArray);
       setDataKepsek(kepsek);
       setDataPembinaanKasus(pembinaanKasus);
     } catch (error) {
@@ -53,13 +69,17 @@ const PembinaanKasusPage = () => {
   // panggil fetchData saat komponen mount
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [toaster]);
 
   // FILTER DATA SISWA BERDASARKAN KELAS
-  const filteredData =
-    kelasFilter === "Pilih Kelas"
-      ? dataSiswa
-      : dataSiswa.filter((s) => String(s.kelasId) === String(kelasFilter));
+  const filteredData = useMemo(() => {
+    if (!kelasFilter || kelasFilter === "Pilih Kelas") return [];
+    return dataSiswa.filter((s) => {
+      const siswaKelasId =
+        s.kelasId || s.kelas?.id || s.siswa?.kelasId || s.siswa?.kelas?.id;
+      return String(siswaKelasId) === String(kelasFilter);
+    });
+  }, [kelasFilter, dataSiswa]);
 
   // FUNGSI PRINT
   const handlePrint = useReactToPrint({
@@ -69,6 +89,11 @@ const PembinaanKasusPage = () => {
 
   // ICON TOMBOL
   const Icons = [
+    {
+      Icon: FilePlus2,
+      className: "hover:bg-accent",
+      onClick: () => setOpen(true),
+    },
     {
       Icon: Printer,
       className: "hover:bg-accent",
@@ -112,6 +137,15 @@ const PembinaanKasusPage = () => {
           onSuccess={fetchData}
         />
       </div>
+
+      {open && (
+        <TambahPembinaanKasusButton
+          open={open}
+          setOpen={setOpen}
+          siswa={filteredData}
+          onSuccess={fetchData}
+        />
+      )}
     </div>
   );
 };
