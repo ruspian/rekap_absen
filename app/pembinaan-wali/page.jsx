@@ -1,5 +1,6 @@
 "use client";
 
+import TambahPembinaanWaliButton from "@/components/button/TambahPembinaanWaliButton";
 import { TabelPembinaanWali } from "@/components/table/TabelPembinaanWali";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
@@ -12,7 +13,7 @@ import {
 } from "@/lib/data";
 import { handleDownloadExcelPembinaanWali } from "@/lib/downloadExcel";
 import { useToaster } from "@/providers/ToasterProvider";
-import { FileDown, Printer, UsersRound } from "lucide-react";
+import { FileDown, FilePlus2, Printer, UsersRound } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 
@@ -22,6 +23,7 @@ const PembinaanWaliPage = () => {
   const [dataKepsek, setDataKepsek] = useState(null);
   const [dataPembinaanWali, setDataPembinaanWali] = useState([]);
   const [kelasFilter, setKelasFilter] = useState("Pilih Kelas");
+  const [open, setOpen] = useState(false);
   const toaster = useToaster();
 
   const tableRef = useRef();
@@ -88,6 +90,11 @@ const PembinaanWaliPage = () => {
   // ICON TOMBOL
   const Icons = [
     {
+      Icon: FilePlus2,
+      className: "hover:bg-accent",
+      onClick: () => setOpen(true),
+    },
+    {
       Icon: Printer,
       className: "hover:bg-accent",
       onClick: handlePrint,
@@ -130,6 +137,15 @@ const PembinaanWaliPage = () => {
           onSuccess={fetchData}
         />
       </div>
+
+      {open && (
+        <TambahPembinaanWaliButton
+          setOpen={setOpen}
+          open={open}
+          onSuccess={fetchData}
+          siswa={filteredData}
+        />
+      )}
     </div>
   );
 };

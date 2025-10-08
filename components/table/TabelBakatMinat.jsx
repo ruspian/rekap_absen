@@ -3,7 +3,7 @@ import TambahButtonMinat from "@/components/button/TambahButtonMinat";
 import EditButtonMinat from "@/components/button/EditButtonMinat";
 import React from "react";
 
-function TabelBakatMinat({ data, kepsek, bakat, onSuccess }) {
+function TabelBakatMinat({ data, kepsek, onSuccess }) {
   const [kelas] = data;
 
   return (

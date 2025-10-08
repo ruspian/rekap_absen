@@ -66,63 +66,104 @@ function TabelPembinaanWali({ data, pembinaanWali }) {
               <th className="border px-2 py-2 whitespace-nowrap" rowSpan={2}>
                 Keterangan
               </th>
-
-              <th
-                className="border px-2 py-2 whitespace-nowrap print-hidden"
-                rowSpan={2}
-              >
-                Aksi
-              </th>
             </tr>
           </thead>
 
           {/* Body */}
           <tbody>
-            {data.length ? (
-              pembinaanWali.map((binaanWali, i) => (
-                <tr key={pembinaanWali.id || i} className="hover:bg-slate-50">
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {i + 1}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {formatTanggal(binaanWali.tanggal)}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanWali.siswa.nama}
-                  </td>
+            {data ? (
+              data.map((siswa, i) => {
+                // tentukan jumlah baris
+                const rowCount =
+                  siswa.pembinaan_wali?.length > 0
+                    ? siswa.pembinaan_wali.length
+                    : 1;
 
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanWali.uraian_kejadian}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanWali.tanggapan_siswa}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanWali.arahan}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanWali.kesepakatan}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {""}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {""}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {binaanWali.no_surat}
-                  </td>
-                  <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {""}
-                  </td>
+                // jika siswa tidak ada binaan wali
+                if (
+                  siswa.pembinaan_wali.length === 0 ||
+                  !siswa.pembinaan_wali
+                ) {
+                  return (
+                    <tr key={siswa.id || i} className="hover:bg-slate-50">
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {i + 1}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {siswa.nama}
+                      </td>
 
-                  <td className="border px-2 py-1 text-center print-hidden">
-                    <div className="flex gap-2 items-center justify-center">
-                      <TambahPembinaanWaliButton siswa={binaanWali.siswa} />
-                    </div>
-                  </td>
-                </tr>
-              ))
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                      <td className="border px-2 py-1 text-center whitespace-nowrap">
+                        {""}
+                      </td>
+                    </tr>
+                  );
+                }
+
+                // jika ada binaan wali
+                return siswa.pembinaan_wali.map((binaanWali, i) => (
+                  <tr key={pembinaanWali.id || i} className="hover:bg-slate-50">
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {i + 1}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {formatTanggal(binaanWali.tanggal)}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {siswa.nama}
+                    </td>
+
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {binaanWali.uraian_kejadian}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {binaanWali.tanggapan_siswa}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {binaanWali.arahan}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {binaanWali.kesepakatan}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {""}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {""}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {binaanWali.no_surat}
+                    </td>
+                    <td className="border px-2 py-1 text-center whitespace-nowrap">
+                      {""}
+                    </td>
+                  </tr>
+                ));
+              })
             ) : (
               <tr>
                 <td

@@ -117,7 +117,6 @@ const BakatMinatPage = () => {
         <TabelBakatMinat
           data={filteredData}
           kepsek={dataKepsek}
-          bakat={dataBakat}
           onSuccess={fetchData}
         />
       </div>
