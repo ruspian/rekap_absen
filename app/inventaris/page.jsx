@@ -4,6 +4,7 @@ import { TabelInventaris } from "@/components/table/TabelInventaris";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
 import { KelasDropdown } from "@/components/ui/kelas-selector-dropdown";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getInventaris, getKelas } from "@/lib/data";
 import {
   handleDownloadExcelInventaris,
@@ -18,6 +19,7 @@ const InventarisPage = () => {
   const [dataInventaris, setDataInventaris] = useState([]);
   const [dataKelas, setDataKelas] = useState([]);
   const [kelasFilter, setKelasFilter] = useState("Pilih Kelas");
+  const [loading, setLoading] = useState(false);
   const toaster = useToaster();
 
   const tableRef = useRef();
@@ -25,6 +27,7 @@ const InventarisPage = () => {
   // FETCH DATA
   const fetchData = async () => {
     try {
+      setLoading(true);
       const [inventaris, kelas] = await Promise.all([
         getInventaris(),
         getKelas(),
@@ -39,6 +42,8 @@ const InventarisPage = () => {
         duration: 5000,
         position: "top-center",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,6 +111,22 @@ const InventarisPage = () => {
       className: "hover:bg-accent",
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex flex-col space-y-3 gap-4">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+        <Skeleton className="h-[400px] w-[500px] rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

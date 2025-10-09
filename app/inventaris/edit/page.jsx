@@ -2,15 +2,17 @@
 
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getInventarisById, getKelas } from "@/lib/data";
 import { useToaster } from "@/providers/ToasterProvider";
-import { BadgePlus } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const EditInventarisPage = () => {
   const [dataKelas, setDataKelas] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const { register, handleSubmit, reset } = useForm();
   const toaster = useToaster();
@@ -22,6 +24,7 @@ const EditInventarisPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const [kelas, inventarisById] = await Promise.all([
           getKelas(),
           getInventarisById(id),
@@ -41,6 +44,8 @@ const EditInventarisPage = () => {
           duration: 5000,
           position: "top-center",
         });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -103,13 +108,29 @@ const EditInventarisPage = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex flex-col space-y-3 gap-4">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+        <Skeleton className="h-[400px] w-[500px] rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Breadcrumb />
 
       <div className="flex gap-2 items-center my-10">
-        <BadgePlus size={30} strokeWidth={2.25} />
-        <h2 className="text-2xl font-semibold">Tambah Inventaris</h2>
+        <Settings size={30} strokeWidth={2.25} />
+        <h2 className="text-2xl font-semibold">Edit Inventaris</h2>
       </div>
 
       {/* FORM */}

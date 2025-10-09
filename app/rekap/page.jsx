@@ -5,6 +5,7 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 import { BulanDropdown } from "@/components/ui/bulan-selector-dropdown";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
 import { KelasDropdown } from "@/components/ui/kelas-selector-dropdown";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getBulan, getKelas, getMinggu, getSiswa } from "@/lib/data";
 import { handleDownloadExcelRekapKehadiran } from "@/lib/downloadExcel";
 import { useToaster } from "@/providers/ToasterProvider";
@@ -102,6 +103,18 @@ const RekapAbsenPage = () => {
     },
   ];
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col space-y-3 gap-4">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+        <Skeleton className="h-[400px] w-full rounded-xl" />
+      </div>
+    );
+  }
+
   return (
     <div>
       <Breadcrumb />
@@ -129,21 +142,15 @@ const RekapAbsenPage = () => {
       </div>
 
       <div ref={tableRef}>
-        {isLoading ? (
-          <div className="w-full h-48 flex justify-center items-center">
-            <p>Memuat data...</p>
-          </div>
-        ) : (
-          <TabelRekapKehadiran
-            minggu={dataMinggu}
-            data={rekapKehadiran}
-            namaKelas={selectedKelas?.nama_kelas}
-            jurusan={selectedKelas?.jurusan}
-            namaBulan={selectedBulan?.namaBulan}
-            bulan={selectedBulan}
-            dataSiswa={dataSiswa}
-          />
-        )}
+        <TabelRekapKehadiran
+          minggu={dataMinggu}
+          data={rekapKehadiran}
+          namaKelas={selectedKelas?.nama_kelas}
+          jurusan={selectedKelas?.jurusan}
+          namaBulan={selectedBulan?.namaBulan}
+          bulan={selectedBulan}
+          dataSiswa={dataSiswa}
+        />
       </div>
     </div>
   );

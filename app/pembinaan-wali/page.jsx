@@ -5,6 +5,7 @@ import { TabelPembinaanWali } from "@/components/table/TabelPembinaanWali";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { AnimatedFloatingButton } from "@/components/ui/floating-action-button";
 import { KelasDropdown } from "@/components/ui/kelas-selector-dropdown";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   getKelas,
   getKepalaSekolah,
@@ -23,6 +24,7 @@ const PembinaanWaliPage = () => {
   const [dataKepsek, setDataKepsek] = useState(null);
   const [dataPembinaanWali, setDataPembinaanWali] = useState([]);
   const [kelasFilter, setKelasFilter] = useState("Pilih Kelas");
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const toaster = useToaster();
 
@@ -31,6 +33,8 @@ const PembinaanWaliPage = () => {
   // FETCH DATA
   const fetchData = async () => {
     try {
+      setLoading(true);
+
       const [siswa, kelas, kepsek, pembinaanWali] = await Promise.all([
         getSiswa(),
         getKelas(),
@@ -63,6 +67,8 @@ const PembinaanWaliPage = () => {
         duration: 5000,
         position: "top-center",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,6 +111,22 @@ const PembinaanWaliPage = () => {
       className: "hover:bg-accent",
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex flex-col space-y-3 gap-4">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+        <Skeleton className="h-[400px] w-full rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

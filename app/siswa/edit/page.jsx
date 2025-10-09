@@ -2,6 +2,7 @@
 
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getKelas, getSiswaById } from "@/lib/data";
 import { formatToYyyyMmDd } from "@/lib/formatTanggal";
 import { useToaster } from "@/providers/ToasterProvider";
@@ -123,7 +124,15 @@ const EditDataSiswaPage = () => {
   };
 
   if (isFetching) {
-    return <div>Memuat data siswa...</div>;
+    return (
+      <div className="flex flex-col space-y-3 gap-4">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+        <Skeleton className="h-[400px] w-[500px] rounded-xl" />
+      </div>
+    );
   }
 
   return (
