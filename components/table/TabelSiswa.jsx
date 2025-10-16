@@ -4,6 +4,8 @@ import { formatTanggal } from "@/lib/formatTanggal";
 import Link from "next/link";
 
 function TableSiswa({ initialData, onDelete }) {
+  console.log("initialData", initialData);
+
   return (
     <div className="bg-background max-w-[1200px] mx-auto rounded-md shadow-md border">
       {/* Wrapper biar bisa slide kalau overflow */}
@@ -12,17 +14,15 @@ function TableSiswa({ initialData, onDelete }) {
           {/* Judul Utama */}
           <thead>
             <tr>
+              {/* tampilkan hanya satu judul utama */}
               {initialData && initialData.length > 0 ? (
-                initialData.map((siswa, index) => (
-                  <th
-                    key={siswa.id || index}
-                    colSpan={11}
-                    className="text-center font-bold text-lg bg-slate-100 text-black py-3"
-                  >
-                    DATA SISWA KELAS {siswa?.kelas?.nama_kelas}{" "}
-                    {siswa?.kelas?.jurusan.toUpperCase()}
-                  </th>
-                ))
+                <th
+                  colSpan={11}
+                  className="text-center font-bold text-lg bg-slate-100 text-black py-3"
+                >
+                  DATA SISWA KELAS {initialData[0]?.kelas?.nama_kelas}{" "}
+                  {initialData[0]?.kelas?.jurusan.toUpperCase()}
+                </th>
               ) : (
                 <th
                   colSpan={11}

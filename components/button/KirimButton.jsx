@@ -12,8 +12,6 @@ import { useState } from "react";
 import { formatTanggal } from "@/lib/formatTanggal";
 
 const KirimButton = ({ data, dataLaporan }) => {
-  console.log("dataLaporan", dataLaporan);
-
   const [open, setOpen] = useState(false);
 
   const toaster = useToaster();
