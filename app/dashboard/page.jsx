@@ -74,7 +74,7 @@ const DashboardPage = () => {
         <h2 className="text-2xl font-semibold">DASHBOARD</h2>
       </div>
 
-      <BadgeDashboard dataRekap={dataBulanIni} dataSiswa={dataSiswa} />
+      <BadgeDashboard dataSiswa={dataSiswa} />
 
       <div className="mt-6">
         <h3 className="font-semibold text-xl mb-2">

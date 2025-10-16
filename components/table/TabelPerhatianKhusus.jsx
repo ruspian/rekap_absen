@@ -1,7 +1,6 @@
-function TabelPerhatianKhusus({ dataRekap, dataLaporan }) {
-  console.log("dataRekap", dataRekap);
-  console.log("dataLaporan", dataLaporan);
+import KirimButton from "../button/KirimButton";
 
+function TabelPerhatianKhusus({ dataRekap, dataLaporan }) {
   return (
     <div className="bg-background max-w-[1200px] mx-auto rounded-md shadow-md border">
       {/* Wrapper biar bisa slide kalau overflow */}
@@ -46,20 +45,32 @@ function TabelPerhatianKhusus({ dataRekap, dataLaporan }) {
                   <td className="border px-2 py-1 text-center whitespace-nowrap">
                     {item.siswa.nama}
                   </td>
+
                   <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {item.total.alfa}
+                    {dataLaporan.alfa.map((alfa) => {
+                      if (item.siswa.id === alfa.siswa.id) {
+                        return alfa.total.alfa;
+                      }
+                    })}
                   </td>
                   <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {item.total.izin}
+                    {dataLaporan.izin.map((izin) => {
+                      if (item.siswa.id === izin.siswa.id) {
+                        return izin.total.izin;
+                      }
+                    })}
                   </td>
                   <td className="border px-2 py-1 text-center whitespace-nowrap">
-                    {item.total.sakit}
+                    {dataLaporan.sakit.map((sakit) => {
+                      if (item.siswa.id === sakit.siswa.id) {
+                        return sakit.total.sakit;
+                      }
+                    })}
                   </td>
 
                   <td className="border px-2 py-1 text-center print-hidden">
                     <div className="flex gap-2 items-center justify-center">
-                      {/* <TambahButtonMinat /> */}
-                      {/* <EditButtonMinat /> */}
+                      <KirimButton data={item} dataLaporan={dataLaporan} />
                     </div>
                   </td>
                 </tr>

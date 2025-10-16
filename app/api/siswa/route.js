@@ -64,10 +64,23 @@ export const GET = async (req) => {
     });
 
     const jumlahSiswa = await prisma.siswa.count();
+    const jumlahLakiLaki = await prisma.siswa.count({
+      where: {
+        gender: "LakiLaki",
+      },
+    });
+
+    const jumlahPerempuan = await prisma.siswa.count({
+      where: {
+        gender: "Perempuan",
+      },
+    });
 
     const responseData = {
       siswa: siswa,
       jumlahSiswa: jumlahSiswa,
+      jumlahLakiLaki: jumlahLakiLaki,
+      jumlahPerempuan: jumlahPerempuan,
     };
     return new NextResponse(JSON.stringify(responseData), {
       status: 200,

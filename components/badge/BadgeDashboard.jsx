@@ -1,7 +1,9 @@
-import { BookMinus, BookText, BookUser, BookX } from "lucide-react";
+import { BookMinus, BookUser, BookX } from "lucide-react";
 import React from "react";
 
-const BadgeDashboard = ({ dataRekap, dataSiswa }) => {
+const BadgeDashboard = ({ dataSiswa }) => {
+  console.log("dataSiswa", dataSiswa);
+
   const items = [
     {
       icon: <BookUser size={50} />,
@@ -11,21 +13,15 @@ const BadgeDashboard = ({ dataRekap, dataSiswa }) => {
     },
     {
       icon: <BookX size={50} />,
-      title: "Jumlah Alfa",
-      count: dataRekap?.total?.alfa,
-      sub: dataRekap?.bulan?.namaBulan,
+      title: "Jumlah Laki-Laki",
+      count: dataSiswa.jumlahLakiLaki,
+      sub: "Siswa",
     },
     {
       icon: <BookMinus size={50} />,
-      title: "Jumlah Izin",
-      count: dataRekap?.total?.izin,
-      sub: dataRekap?.bulan.namaBulan,
-    },
-    {
-      icon: <BookText size={50} />,
-      title: "Jumlah Sakit",
-      count: dataRekap?.total?.sakit,
-      sub: dataRekap?.bulan.namaBulan,
+      title: "Jumlah Perempuan",
+      count: dataSiswa.jumlahPerempuan,
+      sub: "siswa",
     },
   ];
   return (
